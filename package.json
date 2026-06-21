@@ -1,0 +1,9 @@
+{
+  "name": "keep-me",
+  "version": "1.0.0",
+  "description": "Multi-project task tracker",
+  "dependencies": {
+    "sql.js": "^1.11.0"
+  },
+  "private": true
+}
