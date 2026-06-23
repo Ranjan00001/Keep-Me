@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keep-Me</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/icon.svg">
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Keep-Me</h1>
+    <span class="tagline">multi-project tracker</span>
+  </div>
+  <button id="shutdownBtn" class="btn-shutdown" onclick="shutdown()">Shut Down Server</button>
+</header>
+
+<button id="newProjectBtn" class="btn-primary" onclick="openNewProject()">+ New Project</button>
+
+<div id="newProjectPanel" class="panel hidden">
+  <h3>New Project</h3>
+  <div class="form-row">
+    <input id="npName" type="text" placeholder="Project name">
+    <input id="npUrl" type="text" placeholder="https://github.com/...  or  file:///home/...">
+  </div>
+  <div class="form-actions">
+    <button class="btn-primary" onclick="addProject()">Add</button>
+    <button class="btn" onclick="closeNewProject()">Cancel</button>
+  </div>
+</div>
+
+<div id="projectList"></div>
+
+<div id="shutdownOverlay" class="hidden">
+  <div class="shutdown-msg">
+    <h2>Server stopped</h2>
+    <p>You can close this tab.</p>
+    <button class="btn" onclick="window.close()">Close</button>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
