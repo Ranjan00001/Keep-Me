@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Keep-Me
+Comment=Multi-project task tracker
+Exec=/home/dr/Documents/Keep-Me/start.sh
+Icon=/home/dr/Documents/Keep-Me/icon.svg
+Type=Application
+Categories=Utility;
+Terminal=false
+StartupNotify=true
