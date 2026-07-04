@@ -18,14 +18,14 @@ function log(...args) {
   const msg = `[${timestamp()}] ${args.join(' ')}`;
   console.log(msg);
   try { fs.appendFileSync(LOG_FILE, msg + '\n'); }
-  catch {}
+  catch (e) { console.error('Failed to write to log file:', e.message); }
 }
 
 function error(...args) {
   const msg = `[${timestamp()}] ERROR: ${args.join(' ')}`;
   console.error(msg);
   try { fs.appendFileSync(LOG_FILE, msg + '\n'); }
-  catch {}
+  catch (e) { console.error('Failed to write to log file:', e.message); }
 }
 
 function saveDb() {
