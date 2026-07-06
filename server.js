@@ -8,6 +8,8 @@ const DB_PATH = path.join(__dirname, 'dashboard.db');
 const LOG_FILE = path.join(__dirname, '.server.log');
 const PID_FILE = path.join(__dirname, '.server.pid');
 
+const MAX_BODY_SIZE = 1024 * 1024; // 1MB
+
 let db;
 
 function timestamp() {
@@ -84,13 +86,24 @@ function serveFile(res, filePath) {
 }
 
 function parseBody(req) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     let body = '';
-    req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
-      try { resolve(JSON.parse(body)); }
-      catch { resolve({}); }
+    let size = 0;
+    req.on('data', chunk => {
+      size += chunk.length;
+      if (size > MAX_BODY_SIZE) {
+        req.destroy();
+        reject(new Error('Payload too large'));
+        return;
+      }
+      body += chunk;
     });
+    req.on('end', () => {
+      if (size > MAX_BODY_SIZE) return;
+      try { resolve(JSON.parse(body)); }
+      catch { reject(new Error('Invalid JSON')); }
+    });
+    req.on('error', reject);
   });
 }
 
@@ -101,6 +114,46 @@ function json(res, data, code = 200) {
 
 function logRequest(method, pathname, statusCode) {
   log(`${method} ${pathname} → ${statusCode}`);
+}
+
+const VALID_STATUSES = ['active', 'onhold', 'completed', 'planning'];
+
+function validateProject(body, required) {
+  const errors = [];
+  if (required && (!body.name || !String(body.name).trim())) errors.push('name is required');
+  if (body.name !== undefined && typeof body.name !== 'string') errors.push('name must be a string');
+  if (body.status !== undefined && !VALID_STATUSES.includes(body.status)) errors.push(`status must be one of: ${VALID_STATUSES.join(', ')}`);
+  if (body.url !== undefined && typeof body.url !== 'string') errors.push('url must be a string');
+  return errors;
+}
+
+function validateEntry(body) {
+  const errors = [];
+  if (!body.project_id || !Number.isInteger(body.project_id) || body.project_id <= 0) errors.push('project_id must be a positive integer');
+  if (!body.date || !/^\d{4}-\d{2}-\d{2}$/.test(body.date)) errors.push('date must be YYYY-MM-DD');
+  if (!body.text || !String(body.text).trim()) errors.push('text is required');
+  return errors;
+}
+
+function validateEntryUpdate(body) {
+  const errors = [];
+  if (body.text !== undefined && (!body.text || !String(body.text).trim())) errors.push('text is required');
+  return errors;
+}
+
+function validateReorder(body) {
+  const errors = [];
+  if (!Array.isArray(body)) { errors.push('body must be an array'); return errors; }
+  for (let i = 0; i < body.length; i++) {
+    const item = body[i];
+    if (!item || !Number.isInteger(item.id) || item.id <= 0) errors.push(`item[${i}].id must be a positive integer`);
+    if (item.sort_order === undefined || !Number.isInteger(item.sort_order)) errors.push(`item[${i}].sort_order must be an integer`);
+  }
+  return errors;
+}
+
+class HttpError extends Error {
+  constructor(status, message) { super(message); this.status = status; }
 }
 
 async function initDb() {
@@ -138,7 +191,7 @@ async function initDb() {
 function cleanup() {
   try {
     if (fs.existsSync(PID_FILE)) fs.unlinkSync(PID_FILE);
-  } catch {}
+  } catch (e) { console.error('Failed to clean up PID file:', e.message); }
 }
 
 process.on('exit', cleanup);
@@ -164,18 +217,41 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (method === 'GET' && pathname === '/api/projects') {
-      const projects = q('SELECT * FROM projects ORDER BY sort_order, id');
-      for (const p of projects) {
-        p.entries = q('SELECT * FROM entries WHERE project_id = ? ORDER BY date DESC, sort_order, id', p.id);
+      const rows = q(`
+        SELECT p.id, p.name, p.url, p.status, p.sort_order, p.created_at,
+               e.id AS e_id, e.date AS e_date, e.text AS e_text,
+               e.done AS e_done, e.sort_order AS e_sort_order, e.created_at AS e_created_at
+        FROM projects p
+        LEFT JOIN entries e ON e.project_id = p.id
+        ORDER BY p.sort_order, p.id, e.date DESC, e.sort_order, e.id
+      `);
+      const projectMap = new Map();
+      for (const row of rows) {
+        if (!projectMap.has(row.id)) {
+          projectMap.set(row.id, {
+            id: row.id, name: row.name, url: row.url,
+            status: row.status, sort_order: row.sort_order,
+            created_at: row.created_at, entries: []
+          });
+        }
+        if (row.e_id !== null) {
+          projectMap.get(row.id).entries.push({
+            id: row.e_id, project_id: row.id, date: row.e_date,
+            text: row.e_text, done: row.e_done,
+            sort_order: row.e_sort_order, created_at: row.e_created_at
+          });
+        }
       }
       respond(200);
-      return json(res, projects);
+      return json(res, [...projectMap.values()]);
     }
 
     if (method === 'POST' && pathname === '/api/projects') {
       const body = await parseBody(req);
+      const errors = validateProject(body, true);
+      if (errors.length) throw new HttpError(400, errors.join('; '));
       const info = qRun('INSERT INTO projects (name, url, status) VALUES (?, ?, ?)',
-        body.name || 'Untitled', body.url || '', body.status || 'active');
+        body.name.trim(), (body.url || '').trim(), body.status || 'active');
       const project = qOne('SELECT * FROM projects WHERE id = ?', info.lastInsertRowid);
       project.entries = [];
       log(`Created project #${project.id}: ${project.name}`);
@@ -186,10 +262,14 @@ const server = http.createServer(async (req, res) => {
     const projMatch = pathname.match(/^\/api\/projects\/(\d+)$/);
     if (method === 'PUT' && projMatch) {
       const id = parseInt(projMatch[1]);
+      if (!Number.isInteger(id) || id <= 0) throw new HttpError(400, 'Invalid project id');
       const body = await parseBody(req);
+      const errors = validateProject(body, true);
+      if (errors.length) throw new HttpError(400, errors.join('; '));
       qRun('UPDATE projects SET name = ?, url = ?, status = ? WHERE id = ?',
-        body.name, body.url, body.status || 'active', id);
+        body.name.trim(), (body.url || '').trim(), body.status || 'active', id);
       const project = qOne('SELECT * FROM projects WHERE id = ?', id);
+      if (!project) throw new HttpError(404, 'Project not found');
       project.entries = q('SELECT * FROM entries WHERE project_id = ? ORDER BY date DESC, sort_order, id', id);
       log(`Updated project #${id}: ${project.name}`);
       respond(200);
@@ -198,26 +278,34 @@ const server = http.createServer(async (req, res) => {
 
     if (method === 'DELETE' && projMatch) {
       const id = parseInt(projMatch[1]);
+      if (!Number.isInteger(id) || id <= 0) throw new HttpError(400, 'Invalid project id');
       const project = qOne('SELECT * FROM projects WHERE id = ?', id);
+      if (!project) throw new HttpError(404, 'Project not found');
       qRun('DELETE FROM entries WHERE project_id = ?', id);
       qRun('DELETE FROM projects WHERE id = ?', id);
-      log(`Deleted project #${id}: ${project ? project.name : 'unknown'}`);
+      log(`Deleted project #${id}: ${project.name}`);
       respond(200);
       return json(res, { ok: true });
     }
 
     if (method === 'POST' && pathname === '/api/entries') {
       const body = await parseBody(req);
+      const errors = validateEntry(body);
+      if (errors.length) throw new HttpError(400, errors.join('; '));
+      const project = qOne('SELECT id FROM projects WHERE id = ?', body.project_id);
+      if (!project) throw new HttpError(404, 'Project not found');
       const info = qRun('INSERT INTO entries (project_id, date, text) VALUES (?, ?, ?)',
-        body.project_id, body.date, body.text);
+        body.project_id, body.date, body.text.trim());
       const entry = qOne('SELECT * FROM entries WHERE id = ?', info.lastInsertRowid);
-      log(`Added entry #${entry.id} to project #${body.project_id}: ${body.text.slice(0, 60)}`);
+      log(`Added entry #${entry.id} to project #${body.project_id}: ${body.text.trim().slice(0, 60)}`);
       respond(201);
       return json(res, entry, 201);
     }
 
     if (method === 'PUT' && pathname === '/api/entries/reorder') {
       const body = await parseBody(req);
+      const errors = validateReorder(body);
+      if (errors.length) throw new HttpError(400, errors.join('; '));
       for (const item of body) {
         qRun('UPDATE entries SET sort_order = ? WHERE id = ?', item.sort_order, item.id);
       }
@@ -229,16 +317,27 @@ const server = http.createServer(async (req, res) => {
     const entryMatch = pathname.match(/^\/api\/entries\/(\d+)$/);
     if (method === 'PUT' && entryMatch) {
       const id = parseInt(entryMatch[1]);
+      if (!Number.isInteger(id) || id <= 0) throw new HttpError(400, 'Invalid entry id');
       const body = await parseBody(req);
-      qRun('UPDATE entries SET text = ?, done = ? WHERE id = ?', body.text, body.done ? 1 : 0, id);
-      log(`Updated entry #${id}: done=${body.done ? 1 : 0}`);
+      const errors = validateEntryUpdate(body);
+      if (errors.length) throw new HttpError(400, errors.join('; '));
+      const existing = qOne('SELECT * FROM entries WHERE id = ?', id);
+      if (!existing) throw new HttpError(404, 'Entry not found');
+      const text = body.text !== undefined ? body.text.trim() : existing.text;
+      const done = body.done !== undefined ? (body.done ? 1 : 0) : existing.done;
+      qRun('UPDATE entries SET text = ?, done = ? WHERE id = ?', text, done, id);
+      log(`Updated entry #${id}: done=${done}`);
       respond(200);
       return json(res, qOne('SELECT * FROM entries WHERE id = ?', id));
     }
 
     if (method === 'DELETE' && entryMatch) {
-      qRun('DELETE FROM entries WHERE id = ?', parseInt(entryMatch[1]));
-      log(`Deleted entry #${entryMatch[1]}`);
+      const id = parseInt(entryMatch[1]);
+      if (!Number.isInteger(id) || id <= 0) throw new HttpError(400, 'Invalid entry id');
+      const entry = qOne('SELECT * FROM entries WHERE id = ?', id);
+      if (!entry) throw new HttpError(404, 'Entry not found');
+      qRun('DELETE FROM entries WHERE id = ?', id);
+      log(`Deleted entry #${id}`);
       respond(200);
       return json(res, { ok: true });
     }
@@ -251,7 +350,7 @@ const server = http.createServer(async (req, res) => {
         log('Server shutting down');
         try {
           if (fs.existsSync(LOG_FILE)) fs.unlinkSync(LOG_FILE);
-        } catch {}
+        } catch (e) { console.error('Failed to clean up log file:', e.message); }
         process.exit(0);
       }, 200);
       return;
@@ -261,8 +360,10 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not found');
   } catch (err) {
-    error(`${method} ${pathname}: ${err.message}`);
-    json(res, { error: err.message }, 500);
+    const status = err.status || 500;
+    if (status === 500) error(`${method} ${pathname}: ${err.message}`);
+    respond(status);
+    json(res, { error: err.message }, status);
   }
 });
 
