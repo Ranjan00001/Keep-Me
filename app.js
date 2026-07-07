@@ -1,40 +1,25 @@
 /* ───────── API ───────── */
+async function apiFetch(path, options = {}) {
+  const r = await fetch(path, {
+    headers: { 'Content-Type': 'application/json' },
+    ...options,
+    body: options.body ? JSON.stringify(options.body) : undefined,
+  });
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || `Request failed (${r.status})`);
+  return data;
+}
+
 const API = {
-  async getProjects() {
-    const r = await fetch('/api/projects');
-    return r.json();
-  },
-  async createProject(data) {
-    const r = await fetch('/api/projects', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    return r.json();
-  },
-  async updateProject(id, data) {
-    const r = await fetch('/api/projects/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    return r.json();
-  },
-  async deleteProject(id) {
-    const r = await fetch('/api/projects/' + id, { method: 'DELETE' });
-    return r.json();
-  },
-  async createEntry(data) {
-    const r = await fetch('/api/entries', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    return r.json();
-  },
-  async updateEntry(id, data) {
-    const r = await fetch('/api/entries/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    return r.json();
-  },
-  async deleteEntry(id) {
-    const r = await fetch('/api/entries/' + id, { method: 'DELETE' });
-    return r.json();
-  },
-  async reorderEntries(items) {
-    const r = await fetch('/api/entries/reorder', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(items) });
-    return r.json();
-  },
-  async shutdown() {
-    await fetch('/api/shutdown', { method: 'POST' });
-  }
+  getProjects: () => apiFetch('/api/projects'),
+  createProject: (data) => apiFetch('/api/projects', { method: 'POST', body: data }),
+  updateProject: (id, data) => apiFetch('/api/projects/' + id, { method: 'PUT', body: data }),
+  deleteProject: (id) => apiFetch('/api/projects/' + id, { method: 'DELETE' }),
+  createEntry: (data) => apiFetch('/api/entries', { method: 'POST', body: data }),
+  updateEntry: (id, data) => apiFetch('/api/entries/' + id, { method: 'PUT', body: data }),
+  deleteEntry: (id) => apiFetch('/api/entries/' + id, { method: 'DELETE' }),
+  reorderEntries: (items) => apiFetch('/api/entries/reorder', { method: 'PUT', body: items }),
+  shutdown: () => fetch('/api/shutdown', { method: 'POST' }),
 };
 
 /* ───────── State ───────── */
@@ -45,7 +30,10 @@ let draggedEntryId = null;
 async function init() {
   try {
     projects = await API.getProjects();
-  } catch { projects = []; }
+  } catch (e) {
+    projects = [];
+    showToast('Failed to load projects');
+  }
   render();
 }
 
@@ -213,7 +201,7 @@ function onDrop(e) {
     id: parseInt(el.dataset.eid),
     sort_order: i
   }));
-  API.reorderEntries(orders);
+  API.reorderEntries(orders).catch(() => showToast('Failed to save order'));
 }
 
 /* ───────── Inline Edit ───────── */
@@ -222,11 +210,17 @@ function editProjectName(pi) {
   const el = document.querySelector(`.project[data-pi="${pi}"] .project-name`);
   if (!el) return;
   makeInlineEdit(el, p.name, async (val) => {
+    const prev = p.name;
     p.name = val;
-    const result = await API.updateProject(p.id, { name: val, url: p.url, status: p.status });
-    // update local entry sort_order for entries
-    p.entries = result.entries || p.entries;
-    render();
+    try {
+      const result = await API.updateProject(p.id, { name: val, url: p.url, status: p.status });
+      p.entries = result.entries || p.entries;
+      render();
+    } catch (e) {
+      p.name = prev;
+      render();
+      showToast(e.message);
+    }
   });
 }
 
@@ -236,9 +230,16 @@ function editProjectUrl(pi) {
   if (!el) return;
   const current = p.url || '';
   makeInlineEdit(el, current, async (val) => {
+    const prev = p.url;
     p.url = val;
-    await API.updateProject(p.id, { name: p.name, url: val, status: p.status });
-    render();
+    try {
+      await API.updateProject(p.id, { name: p.name, url: val, status: p.status });
+      render();
+    } catch (e) {
+      p.url = prev;
+      render();
+      showToast(e.message);
+    }
   });
 }
 
@@ -253,9 +254,16 @@ function editEntryText(eid) {
   }
   if (!entry) return;
   makeInlineEdit(el, entry.text, async (val) => {
+    const prev = entry.text;
     entry.text = val;
-    await API.updateEntry(eid, { text: val, done: entry.done });
-    render();
+    try {
+      await API.updateEntry(eid, { text: val, done: entry.done });
+      render();
+    } catch (e) {
+      entry.text = prev;
+      render();
+      showToast(e.message);
+    }
   });
 }
 
@@ -302,12 +310,14 @@ async function addProject() {
   const name = document.getElementById('npName').value.trim();
   const url = document.getElementById('npUrl').value.trim();
   if (!name) return;
-  const project = await API.createProject({ name, url, status: 'active' });
-  projects.push(project);
-  render();
-  document.getElementById('npName').value = '';
-  document.getElementById('npUrl').value = '';
-  closeNewProject();
+  try {
+    const project = await API.createProject({ name, url, status: 'active' });
+    projects.push(project);
+    render();
+    document.getElementById('npName').value = '';
+    document.getElementById('npUrl').value = '';
+    closeNewProject();
+  } catch (e) { showToast(e.message); }
 }
 
 function toggleCollapse(pi) {
@@ -316,17 +326,26 @@ function toggleCollapse(pi) {
 }
 
 async function changeStatus(pi, status) {
+  const prev = projects[pi].status;
   projects[pi].status = status;
-  await API.updateProject(projects[pi].id, { name: projects[pi].name, url: projects[pi].url, status });
-  render();
+  try {
+    await API.updateProject(projects[pi].id, { name: projects[pi].name, url: projects[pi].url, status });
+    render();
+  } catch (e) {
+    projects[pi].status = prev;
+    render();
+    showToast(e.message);
+  }
 }
 
 async function deleteProject(pi) {
   const p = projects[pi];
   if (!confirm(`Delete "${p.name}" and all its entries?`)) return;
-  await API.deleteProject(p.id);
-  projects.splice(pi, 1);
-  render();
+  try {
+    await API.deleteProject(p.id);
+    projects.splice(pi, 1);
+    render();
+  } catch (e) { showToast(e.message); }
 }
 
 /* ───────── Entry CRUD ───────── */
@@ -336,19 +355,28 @@ async function addEntry(pi) {
   const text = inp.value.trim();
   const date = dateInp.value;
   if (!text || !date) return;
-  const entry = await API.createEntry({ project_id: projects[pi].id, date, text });
-  if (!projects[pi].entries) projects[pi].entries = [];
-  projects[pi].entries.push(entry);
-  render();
+  try {
+    const entry = await API.createEntry({ project_id: projects[pi].id, date, text });
+    if (!projects[pi].entries) projects[pi].entries = [];
+    projects[pi].entries.push(entry);
+    render();
+  } catch (e) { showToast(e.message); }
 }
 
 async function toggleDone(eid) {
   for (const p of projects) {
     const e = p.entries.find(entry => entry.id === eid);
     if (e) {
+      const prev = e.done;
       e.done = e.done ? 0 : 1;
-      await API.updateEntry(eid, { text: e.text, done: e.done });
-      render();
+      try {
+        await API.updateEntry(eid, { text: e.text, done: e.done });
+        render();
+      } catch (err) {
+        e.done = prev;
+        render();
+        showToast(err.message);
+      }
       return;
     }
   }
@@ -356,12 +384,14 @@ async function toggleDone(eid) {
 
 async function deleteEntry(eid) {
   if (!confirm('Delete this entry?')) return;
-  await API.deleteEntry(eid);
-  for (const p of projects) {
-    const idx = p.entries.findIndex(e => e.id === eid);
-    if (idx !== -1) { p.entries.splice(idx, 1); break; }
-  }
-  render();
+  try {
+    await API.deleteEntry(eid);
+    for (const p of projects) {
+      const idx = p.entries.findIndex(e => e.id === eid);
+      if (idx !== -1) { p.entries.splice(idx, 1); break; }
+    }
+    render();
+  } catch (e) { showToast(e.message); }
 }
 
 /* ───────── Shutdown ───────── */
@@ -370,6 +400,16 @@ async function shutdown() {
   document.getElementById('shutdownBtn').textContent = 'Stopping...';
   try { await API.shutdown(); } catch {}
   document.getElementById('shutdownOverlay').classList.remove('hidden');
+}
+
+/* ───────── Toast ───────── */
+function showToast(message, type = 'error') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => { toast.remove(); }, 3000);
 }
 
 /* ───────── Helpers ───────── */
