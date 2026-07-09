@@ -3,3 +3,5 @@ dashboard.db
 .server.log
 .server.pid
 package-lock.json
+.entire
+.opencode
