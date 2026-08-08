@@ -25,6 +25,7 @@ const API = {
 /* ───────── State ───────── */
 let projects = [];
 let draggedEntryId = null;
+let reorderTimer = null;
 
 /* ───────── Init ───────── */
 async function init() {
@@ -201,7 +202,11 @@ function onDrop(e) {
     id: parseInt(el.dataset.eid),
     sort_order: i
   }));
-  API.reorderEntries(orders).catch(() => showToast('Failed to save order'));
+  // Debounce: coalesce rapid drops into one save
+  clearTimeout(reorderTimer);
+  reorderTimer = setTimeout(() => {
+    API.reorderEntries(orders).catch(() => showToast('Failed to save order'));
+  }, 300);
 }
 
 /* ───────── Inline Edit ───────── */
@@ -424,7 +429,8 @@ function statusLabel(s) {
 }
 
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 /* ───────── Boot ───────── */

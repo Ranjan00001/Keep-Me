@@ -32,7 +32,8 @@ function error(...args) {
 
 function saveDb() {
   const data = db.export();
-  fs.writeFileSync(DB_PATH, Buffer.from(data));
+  fs.writeFileSync(DB_PATH + '.tmp', Buffer.from(data));
+  fs.renameSync(DB_PATH + '.tmp', DB_PATH);
 }
 
 function q(sql, ...params) {
@@ -281,8 +282,9 @@ const server = http.createServer(async (req, res) => {
       if (!Number.isInteger(id) || id <= 0) throw new HttpError(400, 'Invalid project id');
       const project = qOne('SELECT * FROM projects WHERE id = ?', id);
       if (!project) throw new HttpError(404, 'Project not found');
-      qRun('DELETE FROM entries WHERE project_id = ?', id);
-      qRun('DELETE FROM projects WHERE id = ?', id);
+      db.run('DELETE FROM entries WHERE project_id = ?', [id]);
+      db.run('DELETE FROM projects WHERE id = ?', [id]);
+      saveDb();
       log(`Deleted project #${id}: ${project.name}`);
       respond(200);
       return json(res, { ok: true });
@@ -307,8 +309,9 @@ const server = http.createServer(async (req, res) => {
       const errors = validateReorder(body);
       if (errors.length) throw new HttpError(400, errors.join('; '));
       for (const item of body) {
-        qRun('UPDATE entries SET sort_order = ? WHERE id = ?', item.sort_order, item.id);
+        db.run('UPDATE entries SET sort_order = ? WHERE id = ?', [item.sort_order, item.id]);
       }
+      saveDb();
       log(`Reordered ${body.length} entries`);
       respond(200);
       return json(res, { ok: true });
@@ -348,9 +351,6 @@ const server = http.createServer(async (req, res) => {
       json(res, { ok: true });
       setTimeout(() => {
         log('Server shutting down');
-        try {
-          if (fs.existsSync(LOG_FILE)) fs.unlinkSync(LOG_FILE);
-        } catch (e) { console.error('Failed to clean up log file:', e.message); }
         process.exit(0);
       }, 200);
       return;
@@ -368,7 +368,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 initDb().then(() => {
-  server.listen(PORT, () => {
+  server.listen(PORT, '127.0.0.1', () => {
     log(`Keep-Me running → http://localhost:${PORT}`);
   });
 }).catch(err => {
