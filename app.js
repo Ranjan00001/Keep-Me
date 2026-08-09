@@ -506,8 +506,16 @@ async function toggleShowAllCards() {
   renderFlashcards();
 }
 
-function openAddCard()  { document.getElementById('addCardPanel').classList.remove('hidden'); document.getElementById('fcFront').focus(); }
-function closeAddCard() { document.getElementById('addCardPanel').classList.add('hidden'); }
+function openAddCard()  {
+  document.getElementById('addCardOverlay').classList.remove('hidden');
+  document.getElementById('fcFront').focus();
+}
+function closeAddCard() {
+  document.getElementById('addCardOverlay').classList.add('hidden');
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('addCardOverlay')) closeAddCard();
+}
 
 async function addCard() {
   const topic    = parseInt(document.getElementById('fcTopic').value)    || 0;

@@ -46,34 +46,36 @@
     <div class="fc-header">
       <span class="fc-title">Flashcards</span>
       <button class="btn fc-show-all-btn" id="fcShowAllBtn" onclick="toggleShowAllCards()">Show All</button>
-      <button class="btn-primary" onclick="openAddCard()">+ Card</button>
-    </div>
-
-    <div id="addCardPanel" class="panel hidden">
-      <h3>New Flashcard</h3>
-      <div class="form-row">
-        <select id="fcTopic"></select>
-      </div>
-      <div class="form-row">
-        <textarea id="fcFront" placeholder="Front — question / concept" rows="3"></textarea>
-      </div>
-      <div class="form-row">
-        <textarea id="fcBack" placeholder="Back — answer / explanation" rows="3"></textarea>
-      </div>
-      <div class="form-row fc-interval-row">
-        <label class="fc-label" for="fcInterval">Interval (days)</label>
-        <input id="fcInterval" type="number" value="7" min="1">
-      </div>
-      <div class="form-actions">
-        <button class="btn-primary" onclick="addCard()">Add Card</button>
-        <button class="btn" onclick="closeAddCard()">Cancel</button>
-      </div>
     </div>
 
     <div id="flashcardGrid" class="flashcard-grid"></div>
   </div>
 
 </div><!-- /#app-layout -->
+
+<!-- ── Floating add-card button ──────────────────────── -->
+<button id="addCardFab" class="fc-add-fab" onclick="openAddCard()">+ Card</button>
+
+<!-- ── Add-card overlay (slides in from right) ──────── -->
+<div id="addCardOverlay" class="card-overlay hidden" onclick="handleOverlayClick(event)">
+  <div class="card-overlay-panel">
+    <div class="overlay-header">
+      <h3>New Flashcard</h3>
+      <button class="overlay-close" onclick="closeAddCard()">✕</button>
+    </div>
+    <select id="fcTopic"></select>
+    <textarea id="fcFront" placeholder="Front — question / concept" rows="4"></textarea>
+    <textarea id="fcBack"  placeholder="Back — answer / explanation" rows="4"></textarea>
+    <div class="fc-interval-row">
+      <label class="fc-label" for="fcInterval">Interval (days)</label>
+      <input id="fcInterval" type="number" value="7" min="1">
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" onclick="addCard()">Add Card</button>
+      <button class="btn"         onclick="closeAddCard()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <div id="toast-container"></div>
 
