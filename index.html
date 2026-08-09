@@ -17,21 +17,63 @@
   <button id="shutdownBtn" class="btn-shutdown" onclick="shutdown()">Shut Down Server</button>
 </header>
 
-<button id="newProjectBtn" class="btn-primary" onclick="openNewProject()">+ New Project</button>
+<div id="app-layout">
 
-<div id="newProjectPanel" class="panel hidden">
-  <h3>New Project</h3>
-  <div class="form-row">
-    <input id="npName" type="text" placeholder="Project name">
-    <input id="npUrl" type="text" placeholder="https://github.com/...  or  file:///home/...">
-  </div>
-  <div class="form-actions">
-    <button class="btn-primary" onclick="addProject()">Add</button>
-    <button class="btn" onclick="closeNewProject()">Cancel</button>
-  </div>
-</div>
+  <!-- ── Left: project navigator + detail ─────────────────── -->
+  <div id="left-panel">
+    <div id="projectNav">
+      <select id="projectSelect" onchange="onProjectChange(this.value)"></select>
+      <button class="btn-primary" onclick="openNewProject()">+ New</button>
+    </div>
 
-<div id="projectList"></div>
+    <div id="newProjectPanel" class="panel hidden">
+      <h3>New Project</h3>
+      <div class="form-row">
+        <input id="npName" type="text" placeholder="Project name">
+        <input id="npUrl"  type="text" placeholder="https://...  or  file:///home/...">
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="addProject()">Add</button>
+        <button class="btn" onclick="closeNewProject()">Cancel</button>
+      </div>
+    </div>
+
+    <div id="projectDetail"></div>
+  </div>
+
+  <!-- ── Right: flashcard gallery ──────────────────────────── -->
+  <div id="right-panel">
+    <div class="fc-header">
+      <span class="fc-title">Flashcards</span>
+      <button class="btn fc-show-all-btn" id="fcShowAllBtn" onclick="toggleShowAllCards()">Show All</button>
+      <button class="btn-primary" onclick="openAddCard()">+ Card</button>
+    </div>
+
+    <div id="addCardPanel" class="panel hidden">
+      <h3>New Flashcard</h3>
+      <div class="form-row">
+        <select id="fcTopic"></select>
+      </div>
+      <div class="form-row">
+        <textarea id="fcFront" placeholder="Front — question / concept" rows="3"></textarea>
+      </div>
+      <div class="form-row">
+        <textarea id="fcBack" placeholder="Back — answer / explanation" rows="3"></textarea>
+      </div>
+      <div class="form-row fc-interval-row">
+        <label class="fc-label" for="fcInterval">Interval (days)</label>
+        <input id="fcInterval" type="number" value="7" min="1">
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="addCard()">Add Card</button>
+        <button class="btn" onclick="closeAddCard()">Cancel</button>
+      </div>
+    </div>
+
+    <div id="flashcardGrid" class="flashcard-grid"></div>
+  </div>
+
+</div><!-- /#app-layout -->
 
 <div id="toast-container"></div>
 
