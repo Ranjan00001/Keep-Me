@@ -2,22 +2,32 @@
 DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DIR"
 
-# Use system node (skip nvm which may have a different version)
-if [ -x /usr/bin/node ]; then
-  NODE=/usr/bin/node
-  NPM=/usr/bin/npm
-elif [ -x /usr/local/bin/node ]; then
-  NODE=/usr/local/bin/node
-  NPM=/usr/local/bin/npm
-else
-  NODE=node
-  NPM=npm
+# Detect Node.js & npm
+NODE=${NODE:-node}
+NPM=${NPM:-npm}
+
+if ! command -v "$NODE" >/dev/null 2>&1; then
+  echo "Error: Node.js is not installed or not in PATH." >&2
+  exit 1
 fi
 
-# Register in app menu
-mkdir -p ~/.local/share/applications
-ln -sf "$DIR/keep-me.desktop" ~/.local/share/applications/keep-me.desktop
-update-desktop-database ~/.local/share/applications 2>/dev/null || true
+# Register dynamically in desktop app menu only if missing or path changed
+DESKTOP_ENTRY="$HOME/.local/share/applications/keep-me.desktop"
+if [ ! -f "$DESKTOP_ENTRY" ] || ! grep -q "Exec=$DIR/start.sh" "$DESKTOP_ENTRY" 2>/dev/null; then
+  mkdir -p ~/.local/share/applications
+  cat << EOF > "$DESKTOP_ENTRY"
+[Desktop Entry]
+Name=Keep-Me
+Comment=Multi-project task tracker
+Exec=$DIR/start.sh
+Icon=$DIR/icon.svg
+Type=Application
+Categories=Utility;
+Terminal=false
+StartupNotify=true
+EOF
+  update-desktop-database ~/.local/share/applications 2>/dev/null || true
+fi
 
 # If server is already running, just open browser
 if [ -f .server.pid ] && kill -0 "$(cat .server.pid)" 2>/dev/null; then
