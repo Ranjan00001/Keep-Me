@@ -2,6 +2,8 @@
 DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DIR"
 
+echo "Hi from Ranjan!"
+
 # Detect Node.js & npm
 NODE=${NODE:-node}
 NPM=${NPM:-npm}
