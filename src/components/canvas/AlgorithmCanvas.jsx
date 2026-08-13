@@ -23,11 +23,11 @@ const defaultData = {
     nodes: [
       {
         id: 'root',
-        type: 'algorithm',
+        type: 'function',
         position: { x: 80, y: 80 },
         data: {
           label: 'Main()',
-          typeLabel: 'ENTRY',
+          typeLabel: 'FUNCTION',
           shape: 'rect',
           code: 'public void solve() {\n    for (int i = 0; i < n; i++) {\n        recurse(i);\n    }\n}'
         }
@@ -50,16 +50,18 @@ function loadStorage() {
         : { x: 80 + (idx % 3) * 320, y: 80 + Math.floor(idx / 3) * 180 };
 
       const codeStr = n.data?.code || (Array.isArray(n.lines) ? n.lines.join('\n') : (n.label || 'code();'));
+      const determinedType = (n.type && n.type !== 'algorithm') ? n.type : (n.data?.typeLabel ? n.data.typeLabel.toLowerCase() : 'function');
 
       return {
         id: n.id || `node_${idx}`,
-        type: 'algorithm',
+        type: determinedType,
         position: pos,
         data: {
           label: n.data?.label || n.label || 'Node',
-          typeLabel: n.data?.typeLabel || n.typeLabel || 'BLOCK',
+          typeLabel: n.data?.typeLabel || n.typeLabel || determinedType.toUpperCase(),
           shape: n.data?.shape || n.shape || 'rect',
-          code: codeStr
+          code: codeStr,
+          collapsedRanges: n.data?.collapsedRanges || []
         }
       };
     });

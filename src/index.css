@@ -20,9 +20,9 @@
   --text-muted: #94a3b8;
   --text-dim: #64748b;
 
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-heading: 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, monospace;
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -49,17 +49,38 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Typography Utility Classes */
-h1, h2, h3, h4, .font-heading {
+/* ── Typography Scale & Hierarchy ───────────────────────── */
+h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: var(--font-heading);
   letter-spacing: -0.02em;
 }
 
-code, pre, .font-mono {
+code, pre, .font-mono, .code-textarea, .node-code-row, .row-code-input, .row-line-number, .line-select-inp, .expanded-row-label {
   font-family: var(--font-mono);
 }
 
-/* App Container Layout */
+/* Form Element Typography & Base Control Hierarchy */
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.15s ease;
+}
+
+/* Uppercase Badges & Labels Hierarchy */
+.panel-header, .node-type-badge, .status-badge, .brand-tagline, .fc-topic-badge, th {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* ── App Layout Container ───────────────────────────────── */
 #appRoot, .app-layout-container {
   display: flex;
   flex-direction: column;
@@ -99,12 +120,10 @@ code, pre, .font-mono {
 .brand-tagline {
   font-size: 0.75rem;
   color: var(--text-dim);
-  text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-weight: 600;
 }
 
-/* Nav Link & Button Styles */
+/* ── Nav Links & Buttons Hierarchy ──────────────────────── */
 .nav-btn-group {
   display: flex;
   align-items: center;
@@ -119,8 +138,6 @@ code, pre, .font-mono {
   font-weight: 500;
   padding: 0.4rem 0.85rem;
   border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all 0.15s ease;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -153,7 +170,7 @@ code, pre, .font-mono {
   border-color: var(--accent-danger);
 }
 
-/* 2-Column Dashboard Layout */
+/* ── 2-Column Dashboard Layout ───────────────────────────── */
 .dashboard-view {
   flex: 1;
   display: flex;
@@ -183,7 +200,7 @@ code, pre, .font-mono {
   gap: 1rem;
 }
 
-/* Project Select & Detail Cards */
+/* ── Cards & Select Panels ──────────────────────────────── */
 .card-panel {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -218,11 +235,9 @@ code, pre, .font-mono {
   border-color: var(--accent-blue);
 }
 
-/* Status Badges */
+/* ── Status Badges Hierarchy ────────────────────────────── */
 .status-badge {
   font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.2rem 0.55rem;
   border-radius: 20px;
@@ -232,7 +247,7 @@ code, pre, .font-mono {
 .status-onhold { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
 .status-completed { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); border: 1px solid rgba(139, 92, 246, 0.3); }
 
-/* Entry Items List */
+/* ── Entries List Components ────────────────────────────── */
 .entries-list {
   display: flex;
   flex-direction: column;
@@ -293,7 +308,7 @@ code, pre, .font-mono {
   text-decoration: underline;
 }
 
-/* 3D Flip Flashcards */
+/* ── 3D Flashcards Component ────────────────────────────── */
 .flashcard-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -355,9 +370,7 @@ code, pre, .font-mono {
   font-weight: 600;
   padding: 0.75rem 1.4rem;
   border-radius: 30px;
-  cursor: pointer;
   box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
-  transition: all 0.2s ease;
 }
 .fab-add-card:hover {
   background: var(--accent-primary-hover);
@@ -365,7 +378,7 @@ code, pre, .font-mono {
   box-shadow: 0 6px 24px rgba(16, 185, 129, 0.6);
 }
 
-/* Overlay Panel Slide-in */
+/* ── Slide-in Modal Overlay ──────────────────────────────── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -396,7 +409,7 @@ code, pre, .font-mono {
   to   { transform: translateX(0); }
 }
 
-/* Toast System */
+/* ── Toast Notification System ───────────────────────────── */
 .toast-container {
   position: fixed;
   bottom: 1.5rem;

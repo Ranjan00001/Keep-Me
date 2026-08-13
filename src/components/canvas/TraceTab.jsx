@@ -7,6 +7,40 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { nodeTypes } from './nodes/nodeRegistry.js';
+import SmartEdge from './SmartEdge.jsx';
+
+const edgeTypes = {
+  smart: SmartEdge
+};
+
+function parseLoopSteps(lineCode) {
+  let count = 3;
+  let isExplicitNumeric = false;
+
+  if (lineCode) {
+    // Check if user has explicit bound like i < 5 or i <= 4
+    const match = lineCode.match(/<\s*=?\s*(\d+)/);
+    if (match && match[1]) {
+      const num = parseInt(match[1], 10);
+      if (num > 0 && num <= 8) {
+        count = num;
+        isExplicitNumeric = true;
+      }
+    }
+  }
+
+  const steps = [];
+  for (let i = 0; i < count; i++) {
+    if (isExplicitNumeric) {
+      steps.push(`i = ${i}`);
+    } else {
+      if (i === 0) steps.push('i = 0');
+      else if (i === count - 1) steps.push('i = n');
+      else steps.push(`i = ${i}`);
+    }
+  }
+  return steps;
+}
 
 const VIEWPORT_KEY = 'keepme_canvas_viewport';
 
@@ -53,6 +87,24 @@ export default function TraceTab({
     );
   }, [setNodes]);
 
+  // Handle dynamic width change inside node
+  const handleNodeWidthChange = useCallback((id, newWidth) => {
+    setNodes((nds) =>
+      nds.map((n) => {
+        if (n.id === id && n.data.width !== newWidth) {
+          return {
+            ...n,
+            data: {
+              ...n.data,
+              width: newWidth
+            }
+          };
+        }
+        return n;
+      })
+    );
+  }, [setNodes]);
+
   // Handle line selection
   const handleSelectLine = useCallback((id, lineIdx) => {
     setSelectedNodeId(id);
@@ -91,8 +143,8 @@ export default function TraceTab({
     const genId = () => 'node_' + Math.random().toString(36).substr(2, 7);
     const elifChildId = genId();
     const branchCount = branches.length;
-    const elifY = condNode.position.y + 160;
-    const elifX = condNode.position.x + (branchCount - 1) * 220;
+    const elifY = condNode.position.y + 180;
+    const elifX = condNode.position.x + (branchCount - 1) * 240;
 
     const elifLabel = `x == ${branchCount}`;
 
@@ -121,7 +173,7 @@ export default function TraceTab({
         targetHandle: 'top',
         type: 'bezier',
         label: elifLabel,
-        style: { stroke: '#d29922', strokeWidth: 2 }
+        style: { stroke: '#d29922', strokeWidth: 2.5 }
       }
     ]);
   }, [nodes, setNodes, setEdges]);
@@ -136,8 +188,8 @@ export default function TraceTab({
     const genId = () => 'node_' + Math.random().toString(36).substr(2, 7);
     const elseChildId = genId();
     const branchCount = branches.length;
-    const elseY = condNode.position.y + 160;
-    const elseX = condNode.position.x + (branchCount - 1) * 220;
+    const elseY = condNode.position.y + 180;
+    const elseX = condNode.position.x + (branchCount - 1) * 240;
 
     const newBranch = { type: 'else', label: 'Else', targetId: elseChildId };
 
@@ -164,7 +216,7 @@ export default function TraceTab({
         targetHandle: 'top',
         type: 'bezier',
         label: 'Else',
-        style: { stroke: '#f85149', strokeWidth: 2 }
+        style: { stroke: '#f85149', strokeWidth: 2.5 }
       }
     ]);
   }, [nodes, setNodes, setEdges]);
@@ -173,7 +225,6 @@ export default function TraceTab({
   const hiddenNodeIds = useMemo(() => {
     const hidden = new Set();
     const collectChildren = (parentNodeId, startLine, endLine) => {
-      // Find edges connected to parent from this range or line
       const outgoing = edges.filter(e => {
         if (e.source !== parentNodeId) return false;
         const lineMatch = e.sourceHandle && e.sourceHandle.startsWith('line-');
@@ -184,7 +235,6 @@ export default function TraceTab({
 
       outgoing.forEach(e => {
         hidden.add(e.target);
-        // Recursively hide all descendants of this target child
         const recursiveCollect = (childId) => {
           edges.filter(ce => ce.source === childId).forEach(ce => {
             hidden.add(ce.target);
@@ -212,22 +262,33 @@ export default function TraceTab({
       map[n.id] = {};
     });
 
-    // Compute vertical space required for outgoing step children
-    edges.forEach(e => {
-      if (!map[e.source]) return;
-      if (e.sourceHandle && e.sourceHandle.startsWith('line-')) {
-        const lineIdx = parseInt(e.sourceHandle.replace('line-', ''));
-        const targetNode = nodes.find(n => n.id === e.target);
-        if (targetNode) {
-          const childCodeLines = (targetNode.data.code || '').split('\n').length;
-          const childEstHeight = Math.max(60, 36 + childCodeLines * 22 + 16);
-          map[e.source][lineIdx] = Math.max(map[e.source][lineIdx] || 22, childEstHeight);
+    // Compute vertical space required for outgoing children per line handle
+    nodes.forEach(parentNode => {
+      const parentLines = (parentNode.data.code || '').split('\n');
+      parentLines.forEach((_, lineIdx) => {
+        const lineEdges = edges.filter(e =>
+          e.source === parentNode.id &&
+          e.sourceHandle === `line-${lineIdx}` &&
+          !hiddenNodeIds.has(e.target)
+        );
+
+        if (lineEdges.length > 0) {
+          let totalHeight = 0;
+          lineEdges.forEach((e, idx) => {
+            const childNode = nodes.find(n => n.id === e.target);
+            if (childNode) {
+              const childLines = (childNode.data.code || '').split('\n').length;
+              const childEstHeight = Math.max(80, 38 + childLines * 28 + 16);
+              totalHeight += childEstHeight + (idx > 0 ? 24 : 0);
+            }
+          });
+          map[parentNode.id][lineIdx] = Math.max(28, totalHeight);
         }
-      }
+      });
     });
 
     return map;
-  }, [nodes, edges]);
+  }, [nodes, edges, hiddenNodeIds]);
 
   // Enrich node data with callbacks and dynamic height info
   const enrichedNodes = useMemo(() => {
@@ -256,6 +317,7 @@ export default function TraceTab({
             rowHeights: nodeRowHeightsMap[n.id] || {},
             connectedRanges,
             onCodeChange: handleNodeCodeChange,
+            onWidthChange: handleNodeWidthChange,
             onSelectLine: handleSelectLine,
             onToggleCollapse: handleToggleCollapse,
             onAddElseIf: handleAddElseIf,
@@ -263,7 +325,7 @@ export default function TraceTab({
           }
         };
       });
-  }, [nodes, hiddenNodeIds, nodeRowHeightsMap, selectedNodeId, selectedLineIndex, handleNodeCodeChange, handleSelectLine, handleToggleCollapse, handleAddElseIf, handleAddElse]);
+  }, [nodes, hiddenNodeIds, nodeRowHeightsMap, selectedNodeId, selectedLineIndex, handleNodeCodeChange, handleNodeWidthChange, handleSelectLine, handleToggleCollapse, handleAddElseIf, handleAddElse]);
 
   // Filter edges connected to hidden nodes
   const visibleEdges = useMemo(() => {
@@ -290,21 +352,46 @@ export default function TraceTab({
     const parentLines = (parentNode.data.code || '').split('\n');
     const parentLineCode = (parentLines[lineIdx] || 'code line').trim();
 
+    // Compute line top offset inside parent node
+    const parentRowHeights = nodeRowHeightsMap[targetId] || {};
+    let lineTopOffset = 38; // Header height
+    for (let i = 0; i < lineIdx; i++) {
+      lineTopOffset += Math.max(28, parentRowHeights[i] || 28);
+    }
+
+    // Compute parent total height
+    let totalParentBody = 0;
+    for (let i = 0; i < parentLines.length; i++) {
+      totalParentBody += Math.max(28, parentRowHeights[i] || 28);
+    }
+    const parentHeight = 38 + totalParentBody + 16;
+
     const newNodes = [];
     const newEdges = [];
 
+    const parentWidth = parentNode.data.width
     if (logicType === 'loop') {
-      const startX = parentX + 360;
-      for (let i = 0; i < 3; i++) {
+      // Dynamically compute parent's actual width based on code & label length
+      let maxParentLineLen = (parentNode.data.label || '').length;
+      parentLines.forEach(l => { if (l.length > maxParentLineLen) maxParentLineLen = l.length; });
+
+      const iterWidth = 280;
+      const startX = parentX + parentWidth + 180; // 180px gap after parent's true right edge
+      const firstIterX = startX;
+      const firstIterY = parentY + lineTopOffset;
+
+      const steps = parseLoopSteps(parentLineCode);
+
+      steps.forEach((stepName, i) => {
         const iterId = genId();
-        const stepName = i === 2 ? 'i = n' : `i = ${i}`;
-        const iterY = parentY + lineIdx * 22 + i * 110;
+        const iterX = firstIterX + i * (iterWidth + 20);
 
         newNodes.push({
           id: iterId,
           type: 'loop',
-          position: { x: startX, y: iterY },
+          position: { x: iterX, y: firstIterY },
           data: {
+            width: iterWidth,
             label: `Iteration ${i}`,
             typeLabel: 'LOOP',
             shape: 'pill',
@@ -317,22 +404,24 @@ export default function TraceTab({
           source: targetId,
           sourceHandle: `line-${lineIdx}`,
           target: iterId,
-          targetHandle: 'left',
-          type: 'step',
+          targetHandle: 'bottom',
+          type: 'smart',
           label: stepName,
           style: { stroke: '#388bfd', strokeWidth: 2 }
         });
-      }
+      });
     } else if (logicType === 'conditional') {
       const diamondId = genId();
       const trueId = genId();
       const falseId = genId();
 
-      const diamondY = parentY + 180;
+      const diamondY = parentY
+      const diamondX = parentX + parentWidth + 180;
+
       newNodes.push({
         id: diamondId,
         type: 'condition',
-        position: { x: parentX, y: diamondY },
+        position: { x: diamondX, y: diamondY },
         data: {
           label: 'Condition',
           typeLabel: 'CONDITION',
@@ -347,20 +436,19 @@ export default function TraceTab({
         target: diamondId,
         targetHandle: 'top',
         type: 'bezier',
-        label: parentLineCode.slice(0, 20),
-        style: { stroke: '#d29922', strokeWidth: 2 }
+        label: parentLineCode.slice(0, 24),
       });
 
       newNodes.push({
         id: trueId,
         type: 'block',
-        position: { x: parentX - 220, y: diamondY + 160 },
+        position: { x: diamondX + 220, y: diamondY - 160 },
         data: { label: 'True Branch', typeLabel: 'BLOCK', code: 'processTrue();' }
       });
       newNodes.push({
         id: falseId,
         type: 'block',
-        position: { x: parentX + 220, y: diamondY + 160 },
+        position: { x: diamondX + 220, y: diamondY + 160 },
         data: { label: 'False Branch', typeLabel: 'BLOCK', code: 'processFalse();' }
       });
 
@@ -388,7 +476,7 @@ export default function TraceTab({
     } else if (logicType === 'recursion') {
       const leftId = genId();
       const rightId = genId();
-      const recurseY = parentY + 200;
+      const recurseY = parentY + parentHeight + 160;
 
       newNodes.push({
         id: leftId,
@@ -509,6 +597,7 @@ export default function TraceTab({
             nodes={enrichedNodes}
             edges={visibleEdges}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeClick={onNodeClick}
@@ -538,4 +627,3 @@ export default function TraceTab({
     </div>
   );
 }
-

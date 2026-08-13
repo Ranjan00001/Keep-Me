@@ -771,7 +771,7 @@
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React20 = require_react();
+      var React21 = require_react();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -811,7 +811,7 @@
           implementation
         };
       }
-      var ReactSharedInternals = React20.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React21.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if ("font" === as) return "";
         if ("string" === typeof input)
@@ -947,7 +947,7 @@
     "node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
       "use strict";
       var Scheduler = require_scheduler();
-      var React20 = require_react();
+      var React21 = require_react();
       var ReactDOM = require_react_dom();
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
@@ -1138,7 +1138,7 @@
         return null;
       }
       var isArrayImpl = Array.isArray;
-      var ReactSharedInternals = React20.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React21.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       var sharedNotPendingObject = {
         pending: false,
@@ -12584,7 +12584,7 @@
           0 === i && attemptExplicitHydrationTarget(target);
         }
       };
-      var isomorphicReactPackageVersion$jscomp$inline_1840 = React20.version;
+      var isomorphicReactPackageVersion$jscomp$inline_1840 = React21.version;
       if ("19.2.8" !== isomorphicReactPackageVersion$jscomp$inline_1840)
         throw Error(
           formatProdErrorMessage(
@@ -12755,15 +12755,15 @@
   var require_use_sync_external_store_shim_production = __commonJS({
     "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js"(exports) {
       "use strict";
-      var React20 = require_react();
+      var React21 = require_react();
       function is(x, y) {
         return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
       }
       var objectIs = "function" === typeof Object.is ? Object.is : is;
-      var useState11 = React20.useState;
-      var useEffect5 = React20.useEffect;
-      var useLayoutEffect2 = React20.useLayoutEffect;
-      var useDebugValue2 = React20.useDebugValue;
+      var useState11 = React21.useState;
+      var useEffect6 = React21.useEffect;
+      var useLayoutEffect2 = React21.useLayoutEffect;
+      var useDebugValue2 = React21.useDebugValue;
       function useSyncExternalStore$2(subscribe, getSnapshot) {
         var value = getSnapshot(), _useState = useState11({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
         useLayoutEffect2(
@@ -12774,7 +12774,7 @@
           },
           [subscribe, value, getSnapshot]
         );
-        useEffect5(
+        useEffect6(
           function() {
             checkIfSnapshotChanged(inst) && forceUpdate({ inst });
             return subscribe(function() {
@@ -12800,7 +12800,7 @@
         return getSnapshot();
       }
       var shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
-      exports.useSyncExternalStore = void 0 !== React20.useSyncExternalStore ? React20.useSyncExternalStore : shim;
+      exports.useSyncExternalStore = void 0 !== React21.useSyncExternalStore ? React21.useSyncExternalStore : shim;
     }
   });
 
@@ -12820,19 +12820,19 @@
   var require_with_selector_production = __commonJS({
     "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.js"(exports) {
       "use strict";
-      var React20 = require_react();
+      var React21 = require_react();
       var shim = require_shim();
       function is(x, y) {
         return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
       }
       var objectIs = "function" === typeof Object.is ? Object.is : is;
       var useSyncExternalStore = shim.useSyncExternalStore;
-      var useRef2 = React20.useRef;
-      var useEffect5 = React20.useEffect;
-      var useMemo3 = React20.useMemo;
-      var useDebugValue2 = React20.useDebugValue;
+      var useRef3 = React21.useRef;
+      var useEffect6 = React21.useEffect;
+      var useMemo3 = React21.useMemo;
+      var useDebugValue2 = React21.useDebugValue;
       exports.useSyncExternalStoreWithSelector = function(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
-        var instRef = useRef2(null);
+        var instRef = useRef3(null);
         if (null === instRef.current) {
           var inst = { hasValue: false, value: null };
           instRef.current = inst;
@@ -12872,7 +12872,7 @@
           [getSnapshot, getServerSnapshot, selector, isEqual]
         );
         var value = useSyncExternalStore(subscribe, instRef[0], instRef[1]);
-        useEffect5(
+        useEffect6(
           function() {
             inst.hasValue = true;
             inst.value = value;
@@ -12898,11 +12898,11 @@
   });
 
   // src/index.jsx
-  var import_react25 = __toESM(require_react());
+  var import_react27 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
   // src/App.jsx
-  var import_react24 = __toESM(require_react());
+  var import_react26 = __toESM(require_react());
 
   // src/components/Header.jsx
   var import_react = __toESM(require_react());
@@ -13507,7 +13507,7 @@
   }
 
   // src/components/canvas/AlgorithmCanvas.jsx
-  var import_react22 = __toESM(require_react());
+  var import_react24 = __toESM(require_react());
 
   // node_modules/@xyflow/react/dist/esm/index.js
   var import_jsx_runtime = __toESM(require_jsx_runtime());
@@ -21340,16 +21340,16 @@
     const onReconnectMouseOut = () => setUpdateHover(false);
     return (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [(isReconnectable === true || isReconnectable === "source") && (0, import_jsx_runtime.jsx)(EdgeAnchor, { position: sourcePosition, centerX: sourceX, centerY: sourceY, radius: reconnectRadius, onMouseDown: onReconnectSourceMouseDown, onMouseEnter: onReconnectMouseEnter, onMouseOut: onReconnectMouseOut, type: "source" }), (isReconnectable === true || isReconnectable === "target") && (0, import_jsx_runtime.jsx)(EdgeAnchor, { position: targetPosition, centerX: targetX, centerY: targetY, radius: reconnectRadius, onMouseDown: onReconnectTargetMouseDown, onMouseEnter: onReconnectMouseEnter, onMouseOut: onReconnectMouseOut, type: "target" })] });
   }
-  function EdgeWrapper({ id: id2, edgesFocusable, edgesReconnectable, elementsSelectable, onClick, onDoubleClick, onContextMenu, onMouseEnter, onMouseMove, onMouseLeave, reconnectRadius, onReconnect, onReconnectStart, onReconnectEnd, rfId, edgeTypes, noPanClassName, onError, disableKeyboardA11y }) {
+  function EdgeWrapper({ id: id2, edgesFocusable, edgesReconnectable, elementsSelectable, onClick, onDoubleClick, onContextMenu, onMouseEnter, onMouseMove, onMouseLeave, reconnectRadius, onReconnect, onReconnectStart, onReconnectEnd, rfId, edgeTypes: edgeTypes2, noPanClassName, onError, disableKeyboardA11y }) {
     let edge = useStore((s) => s.edgeLookup.get(id2));
     const defaultEdgeOptions = useStore((s) => s.defaultEdgeOptions);
     edge = defaultEdgeOptions ? { ...defaultEdgeOptions, ...edge } : edge;
     let edgeType = edge.type || "default";
-    let EdgeComponent = edgeTypes?.[edgeType] || builtinEdgeTypes[edgeType];
+    let EdgeComponent = edgeTypes2?.[edgeType] || builtinEdgeTypes[edgeType];
     if (EdgeComponent === void 0) {
       onError?.("011", errorMessages["error011"](edgeType));
       edgeType = "default";
-      EdgeComponent = edgeTypes?.["default"] || builtinEdgeTypes.default;
+      EdgeComponent = edgeTypes2?.["default"] || builtinEdgeTypes.default;
     }
     const isFocusable = !!(edge.focusable || edgesFocusable && typeof edge.focusable === "undefined");
     const isReconnectable = typeof onReconnect !== "undefined" && (edge.reconnectable || edgesReconnectable && typeof edge.reconnectable === "undefined");
@@ -21455,11 +21455,11 @@
     connectionMode: s.connectionMode,
     onError: s.onError
   });
-  function EdgeRendererComponent({ defaultMarkerColor, onlyRenderVisibleElements, rfId, edgeTypes, noPanClassName, onReconnect, onEdgeContextMenu, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, onEdgeClick, reconnectRadius, onEdgeDoubleClick, onReconnectStart, onReconnectEnd, disableKeyboardA11y }) {
+  function EdgeRendererComponent({ defaultMarkerColor, onlyRenderVisibleElements, rfId, edgeTypes: edgeTypes2, noPanClassName, onReconnect, onEdgeContextMenu, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, onEdgeClick, reconnectRadius, onEdgeDoubleClick, onReconnectStart, onReconnectEnd, disableKeyboardA11y }) {
     const { edgesFocusable, edgesReconnectable, elementsSelectable, onError } = useStore(selector$9, shallow$1);
     const edgeIds = useVisibleEdgeIds(onlyRenderVisibleElements);
     return (0, import_jsx_runtime.jsxs)("div", { className: "react-flow__edges", children: [(0, import_jsx_runtime.jsx)(MarkerDefinitions$1, { defaultColor: defaultMarkerColor, rfId }), edgeIds.map((id2) => {
-      return (0, import_jsx_runtime.jsx)(EdgeWrapper$1, { id: id2, edgesFocusable, edgesReconnectable, elementsSelectable, noPanClassName, onReconnect, onContextMenu: onEdgeContextMenu, onMouseEnter: onEdgeMouseEnter, onMouseMove: onEdgeMouseMove, onMouseLeave: onEdgeMouseLeave, onClick: onEdgeClick, reconnectRadius, onDoubleClick: onEdgeDoubleClick, onReconnectStart, onReconnectEnd, rfId, onError, edgeTypes, disableKeyboardA11y }, id2);
+      return (0, import_jsx_runtime.jsx)(EdgeWrapper$1, { id: id2, edgesFocusable, edgesReconnectable, elementsSelectable, noPanClassName, onReconnect, onContextMenu: onEdgeContextMenu, onMouseEnter: onEdgeMouseEnter, onMouseMove: onEdgeMouseMove, onMouseLeave: onEdgeMouseLeave, onClick: onEdgeClick, reconnectRadius, onDoubleClick: onEdgeDoubleClick, onReconnectStart, onReconnectEnd, rfId, onError, edgeTypes: edgeTypes2, disableKeyboardA11y }, id2);
     })] });
   }
   EdgeRendererComponent.displayName = "EdgeRenderer";
@@ -21611,13 +21611,13 @@
       }
     }, []);
   }
-  function GraphViewComponent({ nodeTypes: nodeTypes2, edgeTypes, onInit, onNodeClick, onEdgeClick, onNodeDoubleClick, onEdgeDoubleClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, onSelectionContextMenu, onSelectionStart, onSelectionEnd, connectionLineType, connectionLineStyle, connectionLineComponent, connectionLineContainerStyle, selectionKeyCode, selectionOnDrag, selectionMode, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, deleteKeyCode, onlyRenderVisibleElements, elementsSelectable, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, preventScrolling, defaultMarkerColor, zoomOnScroll, zoomOnPinch, panOnScroll, panOnScrollSpeed, panOnScrollMode, zoomOnDoubleClick, panOnDrag, autoPanOnSelection, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneScroll, onPaneContextMenu, paneClickDistance, nodeClickDistance, onEdgeContextMenu, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, onReconnect, onReconnectStart, onReconnectEnd, noDragClassName, noWheelClassName, noPanClassName, disableKeyboardA11y, nodeExtent, rfId, viewport, onViewportChange, nodesDraggable }) {
+  function GraphViewComponent({ nodeTypes: nodeTypes2, edgeTypes: edgeTypes2, onInit, onNodeClick, onEdgeClick, onNodeDoubleClick, onEdgeDoubleClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, onSelectionContextMenu, onSelectionStart, onSelectionEnd, connectionLineType, connectionLineStyle, connectionLineComponent, connectionLineContainerStyle, selectionKeyCode, selectionOnDrag, selectionMode, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, deleteKeyCode, onlyRenderVisibleElements, elementsSelectable, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, preventScrolling, defaultMarkerColor, zoomOnScroll, zoomOnPinch, panOnScroll, panOnScrollSpeed, panOnScrollMode, zoomOnDoubleClick, panOnDrag, autoPanOnSelection, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneScroll, onPaneContextMenu, paneClickDistance, nodeClickDistance, onEdgeContextMenu, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, onReconnect, onReconnectStart, onReconnectEnd, noDragClassName, noWheelClassName, noPanClassName, disableKeyboardA11y, nodeExtent, rfId, viewport, onViewportChange, nodesDraggable }) {
     useNodeOrEdgeTypesWarning(nodeTypes2);
-    useNodeOrEdgeTypesWarning(edgeTypes);
+    useNodeOrEdgeTypesWarning(edgeTypes2);
     useStylesLoadedWarning();
     useOnInitHandler(onInit);
     useViewportSync(viewport);
-    return (0, import_jsx_runtime.jsx)(FlowRenderer, { onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneContextMenu, onPaneScroll, paneClickDistance, deleteKeyCode, selectionKeyCode, selectionOnDrag, selectionMode, onSelectionStart, onSelectionEnd, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, elementsSelectable, zoomOnScroll, zoomOnPinch, zoomOnDoubleClick, panOnScroll, panOnScrollSpeed, panOnScrollMode, panOnDrag, autoPanOnSelection, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, onSelectionContextMenu, preventScrolling, noDragClassName, noWheelClassName, noPanClassName, disableKeyboardA11y, onViewportChange, isControlledViewport: !!viewport, children: (0, import_jsx_runtime.jsxs)(Viewport, { children: [(0, import_jsx_runtime.jsx)(EdgeRenderer, { edgeTypes, onEdgeClick, onEdgeDoubleClick, onReconnect, onReconnectStart, onReconnectEnd, onlyRenderVisibleElements, onEdgeContextMenu, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, defaultMarkerColor, noPanClassName, disableKeyboardA11y, rfId }), (0, import_jsx_runtime.jsx)(ConnectionLineWrapper, { style: connectionLineStyle, type: connectionLineType, component: connectionLineComponent, containerStyle: connectionLineContainerStyle }), (0, import_jsx_runtime.jsx)("div", { className: "react-flow__edgelabel-renderer" }), (0, import_jsx_runtime.jsx)(NodeRenderer, { nodeTypes: nodeTypes2, onNodeClick, onNodeDoubleClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, nodeClickDistance, onlyRenderVisibleElements, noPanClassName, noDragClassName, disableKeyboardA11y, nodeExtent, rfId, nodesDraggable }), (0, import_jsx_runtime.jsx)("div", { className: "react-flow__viewport-portal" })] }) });
+    return (0, import_jsx_runtime.jsx)(FlowRenderer, { onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneContextMenu, onPaneScroll, paneClickDistance, deleteKeyCode, selectionKeyCode, selectionOnDrag, selectionMode, onSelectionStart, onSelectionEnd, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, elementsSelectable, zoomOnScroll, zoomOnPinch, zoomOnDoubleClick, panOnScroll, panOnScrollSpeed, panOnScrollMode, panOnDrag, autoPanOnSelection, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, onSelectionContextMenu, preventScrolling, noDragClassName, noWheelClassName, noPanClassName, disableKeyboardA11y, onViewportChange, isControlledViewport: !!viewport, children: (0, import_jsx_runtime.jsxs)(Viewport, { children: [(0, import_jsx_runtime.jsx)(EdgeRenderer, { edgeTypes: edgeTypes2, onEdgeClick, onEdgeDoubleClick, onReconnect, onReconnectStart, onReconnectEnd, onlyRenderVisibleElements, onEdgeContextMenu, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, defaultMarkerColor, noPanClassName, disableKeyboardA11y, rfId }), (0, import_jsx_runtime.jsx)(ConnectionLineWrapper, { style: connectionLineStyle, type: connectionLineType, component: connectionLineComponent, containerStyle: connectionLineContainerStyle }), (0, import_jsx_runtime.jsx)("div", { className: "react-flow__edgelabel-renderer" }), (0, import_jsx_runtime.jsx)(NodeRenderer, { nodeTypes: nodeTypes2, onNodeClick, onNodeDoubleClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, nodeClickDistance, onlyRenderVisibleElements, noPanClassName, noDragClassName, disableKeyboardA11y, nodeExtent, rfId, nodesDraggable }), (0, import_jsx_runtime.jsx)("div", { className: "react-flow__viewport-portal" })] }) });
   }
   GraphViewComponent.displayName = "GraphView";
   var GraphView = (0, import_react9.memo)(GraphViewComponent);
@@ -22021,16 +22021,24 @@
     position: "relative",
     zIndex: 0
   };
-  function ReactFlow({ nodes, edges, defaultNodes, defaultEdges, className, nodeTypes: nodeTypes2, edgeTypes, onNodeClick, onEdgeClick, onInit, onMove, onMoveStart, onMoveEnd, onConnect, onConnectStart, onConnectEnd, onClickConnectStart, onClickConnectEnd, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, onNodeDoubleClick, onNodeDragStart, onNodeDrag, onNodeDragStop, onNodesDelete, onEdgesDelete, onDelete, onSelectionChange, onSelectionDragStart, onSelectionDrag, onSelectionDragStop, onSelectionContextMenu, onSelectionStart, onSelectionEnd, onBeforeDelete, connectionMode, connectionLineType = ConnectionLineType.Bezier, connectionLineStyle, connectionLineComponent, connectionLineContainerStyle, deleteKeyCode = "Backspace", selectionKeyCode = "Shift", selectionOnDrag = false, selectionMode = SelectionMode.Full, panActivationKeyCode = "Space", multiSelectionKeyCode = isMacOs() ? "Meta" : "Control", zoomActivationKeyCode = isMacOs() ? "Meta" : "Control", snapToGrid, snapGrid, onlyRenderVisibleElements = false, selectNodesOnDrag, nodesDraggable, autoPanOnNodeFocus, nodesConnectable, nodesFocusable, nodeOrigin = defaultNodeOrigin, edgesFocusable, edgesReconnectable, elementsSelectable = true, defaultViewport: defaultViewport$1 = defaultViewport, minZoom = 0.5, maxZoom = 2, translateExtent = infiniteExtent, preventScrolling = true, nodeExtent, defaultMarkerColor = "#b1b1b7", zoomOnScroll = true, zoomOnPinch = true, panOnScroll = false, panOnScrollSpeed = 0.5, panOnScrollMode = PanOnScrollMode.Free, zoomOnDoubleClick = true, panOnDrag = true, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneScroll, onPaneContextMenu, paneClickDistance = 1, nodeClickDistance = 0, children: children2, onReconnect, onReconnectStart, onReconnectEnd, onEdgeContextMenu, onEdgeDoubleClick, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius = 10, onNodesChange, onEdgesChange, noDragClassName = "nodrag", noWheelClassName = "nowheel", noPanClassName = "nopan", fitView, fitViewOptions, connectOnClick, attributionPosition, proOptions, defaultEdgeOptions, elevateNodesOnSelect = true, elevateEdgesOnSelect = false, disableKeyboardA11y = false, autoPanOnConnect, autoPanOnNodeDrag, autoPanOnSelection = true, autoPanSpeed, connectionRadius, isValidConnection, onError, style: style2, id: id2, nodeDragThreshold, connectionDragThreshold, viewport, onViewportChange, width, height, colorMode = "light", debug, onScroll, ariaLabelConfig, zIndexMode = "basic", ...rest }, ref) {
+  function ReactFlow({ nodes, edges, defaultNodes, defaultEdges, className, nodeTypes: nodeTypes2, edgeTypes: edgeTypes2, onNodeClick, onEdgeClick, onInit, onMove, onMoveStart, onMoveEnd, onConnect, onConnectStart, onConnectEnd, onClickConnectStart, onClickConnectEnd, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, onNodeDoubleClick, onNodeDragStart, onNodeDrag, onNodeDragStop, onNodesDelete, onEdgesDelete, onDelete, onSelectionChange, onSelectionDragStart, onSelectionDrag, onSelectionDragStop, onSelectionContextMenu, onSelectionStart, onSelectionEnd, onBeforeDelete, connectionMode, connectionLineType = ConnectionLineType.Bezier, connectionLineStyle, connectionLineComponent, connectionLineContainerStyle, deleteKeyCode = "Backspace", selectionKeyCode = "Shift", selectionOnDrag = false, selectionMode = SelectionMode.Full, panActivationKeyCode = "Space", multiSelectionKeyCode = isMacOs() ? "Meta" : "Control", zoomActivationKeyCode = isMacOs() ? "Meta" : "Control", snapToGrid, snapGrid, onlyRenderVisibleElements = false, selectNodesOnDrag, nodesDraggable, autoPanOnNodeFocus, nodesConnectable, nodesFocusable, nodeOrigin = defaultNodeOrigin, edgesFocusable, edgesReconnectable, elementsSelectable = true, defaultViewport: defaultViewport$1 = defaultViewport, minZoom = 0.5, maxZoom = 2, translateExtent = infiniteExtent, preventScrolling = true, nodeExtent, defaultMarkerColor = "#b1b1b7", zoomOnScroll = true, zoomOnPinch = true, panOnScroll = false, panOnScrollSpeed = 0.5, panOnScrollMode = PanOnScrollMode.Free, zoomOnDoubleClick = true, panOnDrag = true, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneScroll, onPaneContextMenu, paneClickDistance = 1, nodeClickDistance = 0, children: children2, onReconnect, onReconnectStart, onReconnectEnd, onEdgeContextMenu, onEdgeDoubleClick, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius = 10, onNodesChange, onEdgesChange, noDragClassName = "nodrag", noWheelClassName = "nowheel", noPanClassName = "nopan", fitView, fitViewOptions, connectOnClick, attributionPosition, proOptions, defaultEdgeOptions, elevateNodesOnSelect = true, elevateEdgesOnSelect = false, disableKeyboardA11y = false, autoPanOnConnect, autoPanOnNodeDrag, autoPanOnSelection = true, autoPanSpeed, connectionRadius, isValidConnection, onError, style: style2, id: id2, nodeDragThreshold, connectionDragThreshold, viewport, onViewportChange, width, height, colorMode = "light", debug, onScroll, ariaLabelConfig, zIndexMode = "basic", ...rest }, ref) {
     const rfId = id2 || "1";
     const colorModeClassName = useColorModeClass(colorMode);
     const wrapperOnScroll = (0, import_react9.useCallback)((e) => {
       e.currentTarget.scrollTo({ top: 0, left: 0, behavior: "instant" });
       onScroll?.(e);
     }, [onScroll]);
-    return (0, import_jsx_runtime.jsx)("div", { "data-testid": "rf__wrapper", ...rest, onScroll: wrapperOnScroll, style: { ...style2, ...wrapperStyle }, ref, className: cc(["react-flow", className, colorModeClassName]), id: id2, role: "application", children: (0, import_jsx_runtime.jsxs)(Wrapper, { nodes, edges, width, height, fitView, fitViewOptions, minZoom, maxZoom, nodeOrigin, nodeExtent, zIndexMode, children: [(0, import_jsx_runtime.jsx)(StoreUpdater, { nodes, edges, defaultNodes, defaultEdges, onConnect, onConnectStart, onConnectEnd, onClickConnectStart, onClickConnectEnd, nodesDraggable, autoPanOnNodeFocus, nodesConnectable, nodesFocusable, edgesFocusable, edgesReconnectable, elementsSelectable, elevateNodesOnSelect, elevateEdgesOnSelect, minZoom, maxZoom, nodeExtent, onNodesChange, onEdgesChange, snapToGrid, snapGrid, connectionMode, translateExtent, connectOnClick, defaultEdgeOptions, fitView, fitViewOptions, onNodesDelete, onEdgesDelete, onDelete, onNodeDragStart, onNodeDrag, onNodeDragStop, onSelectionDrag, onSelectionDragStart, onSelectionDragStop, onMove, onMoveStart, onMoveEnd, noPanClassName, nodeOrigin, rfId, autoPanOnConnect, autoPanOnNodeDrag, autoPanSpeed, onError, connectionRadius, isValidConnection, selectNodesOnDrag, nodeDragThreshold, connectionDragThreshold, onBeforeDelete, debug, ariaLabelConfig, zIndexMode }), (0, import_jsx_runtime.jsx)(GraphView, { onInit, onNodeClick, onEdgeClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, onNodeDoubleClick, nodeTypes: nodeTypes2, edgeTypes, connectionLineType, connectionLineStyle, connectionLineComponent, connectionLineContainerStyle, selectionKeyCode, selectionOnDrag, selectionMode, deleteKeyCode, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, onlyRenderVisibleElements, defaultViewport: defaultViewport$1, translateExtent, minZoom, maxZoom, preventScrolling, zoomOnScroll, zoomOnPinch, zoomOnDoubleClick, panOnScroll, panOnScrollSpeed, panOnScrollMode, panOnDrag, autoPanOnSelection, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneScroll, onPaneContextMenu, paneClickDistance, nodeClickDistance, onSelectionContextMenu, onSelectionStart, onSelectionEnd, onReconnect, onReconnectStart, onReconnectEnd, onEdgeContextMenu, onEdgeDoubleClick, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, defaultMarkerColor, noDragClassName, noWheelClassName, noPanClassName, rfId, disableKeyboardA11y, nodeExtent, viewport, onViewportChange, nodesDraggable }), (0, import_jsx_runtime.jsx)(SelectionListener, { onSelectionChange }), children2, (0, import_jsx_runtime.jsx)(Attribution, { proOptions, position: attributionPosition }), (0, import_jsx_runtime.jsx)(A11yDescriptions, { rfId, disableKeyboardA11y })] }) });
+    return (0, import_jsx_runtime.jsx)("div", { "data-testid": "rf__wrapper", ...rest, onScroll: wrapperOnScroll, style: { ...style2, ...wrapperStyle }, ref, className: cc(["react-flow", className, colorModeClassName]), id: id2, role: "application", children: (0, import_jsx_runtime.jsxs)(Wrapper, { nodes, edges, width, height, fitView, fitViewOptions, minZoom, maxZoom, nodeOrigin, nodeExtent, zIndexMode, children: [(0, import_jsx_runtime.jsx)(StoreUpdater, { nodes, edges, defaultNodes, defaultEdges, onConnect, onConnectStart, onConnectEnd, onClickConnectStart, onClickConnectEnd, nodesDraggable, autoPanOnNodeFocus, nodesConnectable, nodesFocusable, edgesFocusable, edgesReconnectable, elementsSelectable, elevateNodesOnSelect, elevateEdgesOnSelect, minZoom, maxZoom, nodeExtent, onNodesChange, onEdgesChange, snapToGrid, snapGrid, connectionMode, translateExtent, connectOnClick, defaultEdgeOptions, fitView, fitViewOptions, onNodesDelete, onEdgesDelete, onDelete, onNodeDragStart, onNodeDrag, onNodeDragStop, onSelectionDrag, onSelectionDragStart, onSelectionDragStop, onMove, onMoveStart, onMoveEnd, noPanClassName, nodeOrigin, rfId, autoPanOnConnect, autoPanOnNodeDrag, autoPanSpeed, onError, connectionRadius, isValidConnection, selectNodesOnDrag, nodeDragThreshold, connectionDragThreshold, onBeforeDelete, debug, ariaLabelConfig, zIndexMode }), (0, import_jsx_runtime.jsx)(GraphView, { onInit, onNodeClick, onEdgeClick, onNodeMouseEnter, onNodeMouseMove, onNodeMouseLeave, onNodeContextMenu, onNodeDoubleClick, nodeTypes: nodeTypes2, edgeTypes: edgeTypes2, connectionLineType, connectionLineStyle, connectionLineComponent, connectionLineContainerStyle, selectionKeyCode, selectionOnDrag, selectionMode, deleteKeyCode, multiSelectionKeyCode, panActivationKeyCode, zoomActivationKeyCode, onlyRenderVisibleElements, defaultViewport: defaultViewport$1, translateExtent, minZoom, maxZoom, preventScrolling, zoomOnScroll, zoomOnPinch, zoomOnDoubleClick, panOnScroll, panOnScrollSpeed, panOnScrollMode, panOnDrag, autoPanOnSelection, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneScroll, onPaneContextMenu, paneClickDistance, nodeClickDistance, onSelectionContextMenu, onSelectionStart, onSelectionEnd, onReconnect, onReconnectStart, onReconnectEnd, onEdgeContextMenu, onEdgeDoubleClick, onEdgeMouseEnter, onEdgeMouseMove, onEdgeMouseLeave, reconnectRadius, defaultMarkerColor, noDragClassName, noWheelClassName, noPanClassName, rfId, disableKeyboardA11y, nodeExtent, viewport, onViewportChange, nodesDraggable }), (0, import_jsx_runtime.jsx)(SelectionListener, { onSelectionChange }), children2, (0, import_jsx_runtime.jsx)(Attribution, { proOptions, position: attributionPosition }), (0, import_jsx_runtime.jsx)(A11yDescriptions, { rfId, disableKeyboardA11y })] }) });
   }
   var index = fixedForwardRef(ReactFlow);
+  var selector$6 = (s) => s.domNode?.querySelector(".react-flow__edgelabel-renderer");
+  function EdgeLabelRenderer({ children: children2 }) {
+    const edgeLabelRenderer = useStore(selector$6);
+    if (!edgeLabelRenderer) {
+      return null;
+    }
+    return (0, import_react_dom.createPortal)(children2, edgeLabelRenderer);
+  }
   function useNodesState(initialNodes) {
     const [nodes, setNodes] = (0, import_react9.useState)(initialNodes);
     const onNodesChange = (0, import_react9.useCallback)((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), []);
@@ -22580,7 +22588,7 @@
   }
 
   // src/components/canvas/TraceTab.jsx
-  var import_react20 = __toESM(require_react());
+  var import_react22 = __toESM(require_react());
 
   // src/components/canvas/nodes/FunctionNode.jsx
   var import_react13 = __toESM(require_react());
@@ -22598,41 +22606,112 @@
   }) {
     const codeLines = (data.code || "").split("\n");
     const lineCount = Math.max(1, codeLines.length);
-    const handleTextChange = (e) => {
-      const val = e.target.value;
-      if (data.onCodeChange) {
-        data.onCodeChange(id2, val);
-      }
-    };
-    const handleKeyDown = (e) => {
-      if (e.key === "Tab") {
-        e.preventDefault();
-        const textarea = e.target;
-        const start2 = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const val = textarea.value;
-        textarea.value = val.substring(0, start2) + "    " + val.substring(end);
-        textarea.selectionStart = textarea.selectionEnd = start2 + 4;
-        handleTextChange(e);
-      }
-    };
+    const rowInputsRef = (0, import_react11.useRef)([]);
     const rowHeights = data.rowHeights || {};
-    let bodyHeight = 0;
-    const lineTopOffsets = [];
+    let totalBodyHeight = 0;
+    const rowMeta = [];
     for (let i = 0; i < lineCount; i++) {
-      lineTopOffsets.push(bodyHeight);
-      const rHeight = rowHeights[i] || 22;
-      bodyHeight += rHeight;
+      const rHeight = Math.max(28, rowHeights[i] || 28);
+      rowMeta.push({
+        height: rHeight,
+        topOffset: totalBodyHeight,
+        isExpanded: rHeight > 34
+      });
+      totalBodyHeight += rHeight;
     }
     let maxLineLen = (data.label || "").length;
     codeLines.forEach((l) => {
       if (l.length > maxLineLen) maxLineLen = l.length;
     });
-    const width = Math.max(240, Math.min(500, maxLineLen * 8 + 44));
-    const minHeight = 36 + bodyHeight + 16;
+    const calculatedWidth = Math.max(280, Math.min(540, maxLineLen * 8.5 + 64));
+    const width = Math.max(data.width || 280, calculatedWidth);
+    (0, import_react11.useEffect)(() => {
+      if (data.onWidthChange && data.width !== width) {
+        data.onWidthChange(id2, width);
+      }
+    }, [id2, width, data.width, data.onWidthChange]);
+    const minHeight = 38 + totalBodyHeight + (extraBodyContent ? 36 : 8);
     const collapsedRanges = data.collapsedRanges || [];
     const isRangeCollapsed = (startLine, endLine) => {
       return collapsedRanges.some(([s, e]) => s === startLine && e === endLine);
+    };
+    const handleLineChange = (idx, newText) => {
+      const updated = [...codeLines];
+      updated[idx] = newText;
+      if (data.onCodeChange) {
+        data.onCodeChange(id2, updated.join("\n"));
+      }
+    };
+    const handleKeyDown = (e, idx) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const input = e.target;
+        const cursor = input.selectionStart || 0;
+        const text = codeLines[idx] || "";
+        const left = text.slice(0, cursor);
+        const right = text.slice(cursor);
+        const updated = [...codeLines.slice(0, idx), left, right, ...codeLines.slice(idx + 1)];
+        if (data.onCodeChange) {
+          data.onCodeChange(id2, updated.join("\n"));
+        }
+        setTimeout(() => {
+          if (rowInputsRef.current[idx + 1]) {
+            rowInputsRef.current[idx + 1].focus();
+            rowInputsRef.current[idx + 1].setSelectionRange(0, 0);
+          }
+        }, 10);
+      } else if (e.key === "Backspace" && (codeLines[idx] === "" || codeLines[idx] === void 0) && codeLines.length > 1) {
+        e.preventDefault();
+        const updated = codeLines.filter((_, i) => i !== idx);
+        if (data.onCodeChange) {
+          data.onCodeChange(id2, updated.join("\n"));
+        }
+        setTimeout(() => {
+          const prevIdx = Math.max(0, idx - 1);
+          if (rowInputsRef.current[prevIdx]) {
+            rowInputsRef.current[prevIdx].focus();
+            const len = rowInputsRef.current[prevIdx].value.length;
+            rowInputsRef.current[prevIdx].setSelectionRange(len, len);
+          }
+        }, 10);
+      } else if (e.key === "ArrowUp" && idx > 0) {
+        e.preventDefault();
+        if (rowInputsRef.current[idx - 1]) {
+          rowInputsRef.current[idx - 1].focus();
+        }
+      } else if (e.key === "ArrowDown" && idx < codeLines.length - 1) {
+        e.preventDefault();
+        if (rowInputsRef.current[idx + 1]) {
+          rowInputsRef.current[idx + 1].focus();
+        }
+      } else if (e.key === "Tab") {
+        e.preventDefault();
+        const input = e.target;
+        const start2 = input.selectionStart || 0;
+        const text = codeLines[idx] || "";
+        const newText = text.substring(0, start2) + "    " + text.substring(start2);
+        handleLineChange(idx, newText);
+        setTimeout(() => {
+          if (rowInputsRef.current[idx]) {
+            rowInputsRef.current[idx].setSelectionRange(start2 + 4, start2 + 4);
+          }
+        }, 10);
+      }
+    };
+    const handlePaste = (e, idx) => {
+      const pasteText = e.clipboardData.getData("text");
+      if (pasteText.includes("\n")) {
+        e.preventDefault();
+        const pasteLines = pasteText.split("\n");
+        const updated = [
+          ...codeLines.slice(0, idx),
+          ...pasteLines,
+          ...codeLines.slice(idx + 1)
+        ];
+        if (data.onCodeChange) {
+          data.onCodeChange(id2, updated.join("\n"));
+        }
+      }
     };
     return /* @__PURE__ */ import_react11.default.createElement(
       "div",
@@ -22642,22 +22721,47 @@
       },
       /* @__PURE__ */ import_react11.default.createElement(Handle, { type: "target", position: Position.Top, id: "top", className: "handle-target-top" }),
       /* @__PURE__ */ import_react11.default.createElement(Handle, { type: "target", position: Position.Left, id: "left", className: "handle-target-left" }),
+      /* @__PURE__ */ import_react11.default.createElement(Handle, { type: "target", position: Position.Bottom, id: "bottom", className: "handle-target-bottom" }),
       /* @__PURE__ */ import_react11.default.createElement("div", { className: "node-card-header" }, /* @__PURE__ */ import_react11.default.createElement("span", { className: "node-type-badge" }, data.typeLabel || badgeText), /* @__PURE__ */ import_react11.default.createElement("span", { className: "node-title-label" }, data.label || "")),
-      /* @__PURE__ */ import_react11.default.createElement("div", { className: "node-card-body" }, /* @__PURE__ */ import_react11.default.createElement(
-        "textarea",
-        {
-          className: "node-card-textarea",
-          value: data.code || "",
-          onChange: handleTextChange,
-          onKeyDown: handleKeyDown,
-          onMouseDown: (e) => e.stopPropagation(),
-          spellCheck: "false",
-          placeholder: "Type code lines here...",
-          style: { height: `${Math.max(44, bodyHeight)}px` }
-        }
-      ), extraBodyContent),
+      /* @__PURE__ */ import_react11.default.createElement("div", { className: "node-card-body" }, codeLines.map((lineText, idx) => {
+        const meta = rowMeta[idx] || { height: 28, topOffset: idx * 28, isExpanded: false };
+        const isActive = data.activeLineIndex === idx;
+        return /* @__PURE__ */ import_react11.default.createElement(
+          "div",
+          {
+            key: idx,
+            className: `node-code-row ${isActive ? "active-code-row" : ""} ${meta.isExpanded ? "expanded-row-shade" : ""}`,
+            style: { height: `${meta.height}px` },
+            onClick: (e) => {
+              e.stopPropagation();
+              if (data.onSelectLine) data.onSelectLine(id2, idx);
+            }
+          },
+          /* @__PURE__ */ import_react11.default.createElement("div", { className: "row-line-number" }, idx + 1),
+          /* @__PURE__ */ import_react11.default.createElement(
+            "input",
+            {
+              ref: (el) => rowInputsRef.current[idx] = el,
+              type: "text",
+              className: "row-code-input",
+              value: lineText,
+              onChange: (e) => handleLineChange(idx, e.target.value),
+              onKeyDown: (e) => handleKeyDown(e, idx),
+              onPaste: (e) => handlePaste(e, idx),
+              onMouseDown: (e) => e.stopPropagation(),
+              onFocus: () => {
+                if (data.onSelectLine) data.onSelectLine(id2, idx);
+              },
+              spellCheck: "false",
+              placeholder: "code line..."
+            }
+          ),
+          meta.isExpanded && /* @__PURE__ */ import_react11.default.createElement("div", { className: "expanded-row-label" }, "\u2193 Connected Block Span (", Math.round(meta.height), "px)")
+        );
+      }), extraBodyContent),
       codeLines.map((line, idx) => {
-        const topOffset = 36 + lineTopOffsets[idx] + 11;
+        const meta = rowMeta[idx] || { height: 28, topOffset: idx * 28, isExpanded: false };
+        const handleTopOffset = 38 + meta.topOffset + meta.height / 2;
         const isActive = data.activeLineIndex === idx;
         const connectedRange = (data.connectedRanges || []).find((r) => r.startLine <= idx && idx <= r.endLine);
         const isCollapsed = connectedRange ? isRangeCollapsed(connectedRange.startLine, connectedRange.endLine) : false;
@@ -22668,9 +22772,9 @@
             type: "source",
             position: Position.Right,
             id: `line-${idx}`,
-            className: `handle-line-source ${isActive ? "active-line-source" : ""} ${isCollapsed ? "collapsed-handle" : ""}`,
-            style: { top: `${topOffset}px` },
-            title: `Line ${idx + 1}: ${line.slice(0, 25)}${isCollapsed ? " (Collapsed)" : ""}`,
+            className: `handle-line-source ${isActive ? "active-line-source" : ""} ${isCollapsed ? "collapsed-handle" : ""} ${connectedRange ? "has-children" : ""}`,
+            style: { top: `${handleTopOffset}px` },
+            title: `Line ${idx + 1}: ${line.slice(0, 25)}${isCollapsed ? " (Click to Expand)" : connectedRange ? " (Click to Collapse)" : ""}`,
             onClick: (e) => {
               e.stopPropagation();
               if (connectedRange && data.onToggleCollapse) {
@@ -22756,7 +22860,7 @@
         ...props,
         badgeText: "CONDITION",
         accentClass: "node-condition",
-        shapeClass: "shape-diamond-container"
+        shapeClass: "shape-diamond"
       },
       /* @__PURE__ */ import_react16.default.createElement("div", { className: "condition-branches-toolbar" }, !hasElse && /* @__PURE__ */ import_react16.default.createElement(import_react16.default.Fragment, null, /* @__PURE__ */ import_react16.default.createElement("button", { className: "btn-add-branch btn-add-elif", onClick: handleAddElseIf }, "+ ElseIf"), /* @__PURE__ */ import_react16.default.createElement("button", { className: "btn-add-branch btn-add-else", onClick: handleAddElse }, "+ Else")))
     );
@@ -22858,7 +22962,105 @@
     // fallback for legacy state
   };
 
+  // src/components/canvas/SmartEdge.jsx
+  var import_react20 = __toESM(require_react());
+  function SmartEdge({
+    id: id2,
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition,
+    targetPosition,
+    style: style2 = {},
+    markerEnd,
+    label,
+    labelClassName = "",
+    labelStyle = {}
+  }) {
+    const [edgePath] = getSmoothStepPath({
+      sourceX,
+      sourceY,
+      sourcePosition,
+      targetX,
+      targetY,
+      targetPosition
+    });
+    let labelX = targetX;
+    let labelY = targetY;
+    switch (targetPosition) {
+      case Position.Bottom:
+      case "bottom":
+        labelY = targetY + 28;
+        break;
+      case Position.Top:
+      case "top":
+        labelY = targetY - 28;
+        break;
+      case Position.Left:
+      case "left":
+        labelX = targetX - 30;
+        break;
+      case Position.Right:
+      case "right":
+        labelX = targetX + 30;
+        break;
+      default:
+        labelY = targetY + 28;
+    }
+    const containerStyle2 = {
+      position: "absolute",
+      transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+      pointerEvents: "all"
+    };
+    return /* @__PURE__ */ import_react20.default.createElement(import_react20.default.Fragment, null, /* @__PURE__ */ import_react20.default.createElement(
+      "path",
+      {
+        id: id2,
+        style: style2,
+        className: "react-flow__edge-path",
+        d: edgePath,
+        markerEnd
+      }
+    ), label && /* @__PURE__ */ import_react20.default.createElement(EdgeLabelRenderer, null, /* @__PURE__ */ import_react20.default.createElement("div", { style: containerStyle2 }, /* @__PURE__ */ import_react20.default.createElement(
+      "span",
+      {
+        className: `smart-edge-badge ${labelClassName}`.trim(),
+        style: labelStyle
+      },
+      label
+    ))));
+  }
+
   // src/components/canvas/TraceTab.jsx
+  var edgeTypes = {
+    smart: SmartEdge
+  };
+  function parseLoopSteps(lineCode) {
+    let count = 3;
+    let isExplicitNumeric = false;
+    if (lineCode) {
+      const match = lineCode.match(/<\s*=?\s*(\d+)/);
+      if (match && match[1]) {
+        const num = parseInt(match[1], 10);
+        if (num > 0 && num <= 8) {
+          count = num;
+          isExplicitNumeric = true;
+        }
+      }
+    }
+    const steps = [];
+    for (let i = 0; i < count; i++) {
+      if (isExplicitNumeric) {
+        steps.push(`i = ${i}`);
+      } else {
+        if (i === 0) steps.push("i = 0");
+        else if (i === count - 1) steps.push("i = n");
+        else steps.push(`i = ${i}`);
+      }
+    }
+    return steps;
+  }
   var VIEWPORT_KEY = "keepme_canvas_viewport";
   function loadViewport() {
     try {
@@ -22887,7 +23089,7 @@
     selectedLineIndex,
     setSelectedLineIndex
   }) {
-    const handleNodeCodeChange = (0, import_react20.useCallback)((id2, newCode) => {
+    const handleNodeCodeChange = (0, import_react22.useCallback)((id2, newCode) => {
       setNodes(
         (nds) => nds.map((n) => {
           if (n.id === id2) {
@@ -22903,11 +23105,27 @@
         })
       );
     }, [setNodes]);
-    const handleSelectLine = (0, import_react20.useCallback)((id2, lineIdx) => {
+    const handleNodeWidthChange = (0, import_react22.useCallback)((id2, newWidth) => {
+      setNodes(
+        (nds) => nds.map((n) => {
+          if (n.id === id2 && n.data.width !== newWidth) {
+            return {
+              ...n,
+              data: {
+                ...n.data,
+                width: newWidth
+              }
+            };
+          }
+          return n;
+        })
+      );
+    }, [setNodes]);
+    const handleSelectLine = (0, import_react22.useCallback)((id2, lineIdx) => {
       setSelectedNodeId(id2);
       setSelectedLineIndex(lineIdx);
     }, [setSelectedNodeId, setSelectedLineIndex]);
-    const handleToggleCollapse = (0, import_react20.useCallback)((id2, startLine, endLine) => {
+    const handleToggleCollapse = (0, import_react22.useCallback)((id2, startLine, endLine) => {
       setNodes(
         (nds) => nds.map((n) => {
           if (n.id === id2) {
@@ -22926,15 +23144,15 @@
         })
       );
     }, [setNodes]);
-    const handleAddElseIf = (0, import_react20.useCallback)((conditionNodeId) => {
+    const handleAddElseIf = (0, import_react22.useCallback)((conditionNodeId) => {
       const condNode = nodes.find((n) => n.id === conditionNodeId);
       if (!condNode) return;
       const branches = condNode.data.branches || [{ type: "true", label: "True" }, { type: "false", label: "False" }];
       const genId = () => "node_" + Math.random().toString(36).substr(2, 7);
       const elifChildId = genId();
       const branchCount = branches.length;
-      const elifY = condNode.position.y + 160;
-      const elifX = condNode.position.x + (branchCount - 1) * 220;
+      const elifY = condNode.position.y + 180;
+      const elifX = condNode.position.x + (branchCount - 1) * 240;
       const elifLabel = `x == ${branchCount}`;
       const newBranch = { type: "elif", label: elifLabel, targetId: elifChildId };
       setNodes((nds) => [
@@ -22959,11 +23177,11 @@
           targetHandle: "top",
           type: "bezier",
           label: elifLabel,
-          style: { stroke: "#d29922", strokeWidth: 2 }
+          style: { stroke: "#d29922", strokeWidth: 2.5 }
         }
       ]);
     }, [nodes, setNodes, setEdges]);
-    const handleAddElse = (0, import_react20.useCallback)((conditionNodeId) => {
+    const handleAddElse = (0, import_react22.useCallback)((conditionNodeId) => {
       const condNode = nodes.find((n) => n.id === conditionNodeId);
       if (!condNode) return;
       const branches = condNode.data.branches || [{ type: "true", label: "True" }, { type: "false", label: "False" }];
@@ -22971,8 +23189,8 @@
       const genId = () => "node_" + Math.random().toString(36).substr(2, 7);
       const elseChildId = genId();
       const branchCount = branches.length;
-      const elseY = condNode.position.y + 160;
-      const elseX = condNode.position.x + (branchCount - 1) * 220;
+      const elseY = condNode.position.y + 180;
+      const elseX = condNode.position.x + (branchCount - 1) * 240;
       const newBranch = { type: "else", label: "Else", targetId: elseChildId };
       setNodes((nds) => [
         ...nds.map((n) => n.id === conditionNodeId ? {
@@ -22996,11 +23214,11 @@
           targetHandle: "top",
           type: "bezier",
           label: "Else",
-          style: { stroke: "#f85149", strokeWidth: 2 }
+          style: { stroke: "#f85149", strokeWidth: 2.5 }
         }
       ]);
     }, [nodes, setNodes, setEdges]);
-    const hiddenNodeIds = (0, import_react20.useMemo)(() => {
+    const hiddenNodeIds = (0, import_react22.useMemo)(() => {
       const hidden = /* @__PURE__ */ new Set();
       const collectChildren = (parentNodeId, startLine, endLine) => {
         const outgoing = edges.filter((e) => {
@@ -23029,26 +23247,34 @@
       });
       return hidden;
     }, [nodes, edges]);
-    const nodeRowHeightsMap = (0, import_react20.useMemo)(() => {
+    const nodeRowHeightsMap = (0, import_react22.useMemo)(() => {
       const map = {};
       nodes.forEach((n) => {
         map[n.id] = {};
       });
-      edges.forEach((e) => {
-        if (!map[e.source]) return;
-        if (e.sourceHandle && e.sourceHandle.startsWith("line-")) {
-          const lineIdx = parseInt(e.sourceHandle.replace("line-", ""));
-          const targetNode = nodes.find((n) => n.id === e.target);
-          if (targetNode) {
-            const childCodeLines = (targetNode.data.code || "").split("\n").length;
-            const childEstHeight = Math.max(60, 36 + childCodeLines * 22 + 16);
-            map[e.source][lineIdx] = Math.max(map[e.source][lineIdx] || 22, childEstHeight);
+      nodes.forEach((parentNode) => {
+        const parentLines = (parentNode.data.code || "").split("\n");
+        parentLines.forEach((_, lineIdx) => {
+          const lineEdges = edges.filter(
+            (e) => e.source === parentNode.id && e.sourceHandle === `line-${lineIdx}` && !hiddenNodeIds.has(e.target)
+          );
+          if (lineEdges.length > 0) {
+            let totalHeight = 0;
+            lineEdges.forEach((e, idx) => {
+              const childNode = nodes.find((n) => n.id === e.target);
+              if (childNode) {
+                const childLines = (childNode.data.code || "").split("\n").length;
+                const childEstHeight = Math.max(80, 38 + childLines * 28 + 16);
+                totalHeight += childEstHeight + (idx > 0 ? 24 : 0);
+              }
+            });
+            map[parentNode.id][lineIdx] = Math.max(28, totalHeight);
           }
-        }
+        });
       });
       return map;
-    }, [nodes, edges]);
-    const enrichedNodes = (0, import_react20.useMemo)(() => {
+    }, [nodes, edges, hiddenNodeIds]);
+    const enrichedNodes = (0, import_react22.useMemo)(() => {
       return nodes.filter((n) => !hiddenNodeIds.has(n.id)).map((n) => {
         const connectedRanges = [];
         edges.filter((e) => e.source === n.id).forEach((e) => {
@@ -23068,6 +23294,7 @@
             rowHeights: nodeRowHeightsMap[n.id] || {},
             connectedRanges,
             onCodeChange: handleNodeCodeChange,
+            onWidthChange: handleNodeWidthChange,
             onSelectLine: handleSelectLine,
             onToggleCollapse: handleToggleCollapse,
             onAddElseIf: handleAddElseIf,
@@ -23075,11 +23302,11 @@
           }
         };
       });
-    }, [nodes, hiddenNodeIds, nodeRowHeightsMap, selectedNodeId, selectedLineIndex, handleNodeCodeChange, handleSelectLine, handleToggleCollapse, handleAddElseIf, handleAddElse]);
-    const visibleEdges = (0, import_react20.useMemo)(() => {
+    }, [nodes, hiddenNodeIds, nodeRowHeightsMap, selectedNodeId, selectedLineIndex, handleNodeCodeChange, handleNodeWidthChange, handleSelectLine, handleToggleCollapse, handleAddElseIf, handleAddElse]);
+    const visibleEdges = (0, import_react22.useMemo)(() => {
       return edges.filter((e) => !hiddenNodeIds.has(e.source) && !hiddenNodeIds.has(e.target));
     }, [edges, hiddenNodeIds]);
-    const onNodeClick = (0, import_react20.useCallback)((_, node) => {
+    const onNodeClick = (0, import_react22.useCallback)((_, node) => {
       setSelectedNodeId(node.id);
       setSelectedLineIndex(0);
     }, [setSelectedNodeId, setSelectedLineIndex]);
@@ -23094,19 +23321,38 @@
       const lineIdx = selectedLineIndex;
       const parentLines = (parentNode.data.code || "").split("\n");
       const parentLineCode = (parentLines[lineIdx] || "code line").trim();
+      const parentRowHeights = nodeRowHeightsMap[targetId] || {};
+      let lineTopOffset = 38;
+      for (let i = 0; i < lineIdx; i++) {
+        lineTopOffset += Math.max(28, parentRowHeights[i] || 28);
+      }
+      let totalParentBody = 0;
+      for (let i = 0; i < parentLines.length; i++) {
+        totalParentBody += Math.max(28, parentRowHeights[i] || 28);
+      }
+      const parentHeight = 38 + totalParentBody + 16;
       const newNodes = [];
       const newEdges = [];
+      const parentWidth = parentNode.data.width;
       if (logicType === "loop") {
-        const startX = parentX + 360;
-        for (let i = 0; i < 3; i++) {
+        let maxParentLineLen = (parentNode.data.label || "").length;
+        parentLines.forEach((l) => {
+          if (l.length > maxParentLineLen) maxParentLineLen = l.length;
+        });
+        const iterWidth = 280;
+        const startX = parentX + parentWidth + 180;
+        const firstIterX = startX;
+        const firstIterY = parentY + lineTopOffset;
+        const steps = parseLoopSteps(parentLineCode);
+        steps.forEach((stepName, i) => {
           const iterId = genId();
-          const stepName = i === 2 ? "i = n" : `i = ${i}`;
-          const iterY = parentY + lineIdx * 22 + i * 110;
+          const iterX = firstIterX + i * (iterWidth + 20);
           newNodes.push({
             id: iterId,
             type: "loop",
-            position: { x: startX, y: iterY },
+            position: { x: iterX, y: firstIterY },
             data: {
+              width: iterWidth,
               label: `Iteration ${i}`,
               typeLabel: "LOOP",
               shape: "pill",
@@ -23118,21 +23364,22 @@
             source: targetId,
             sourceHandle: `line-${lineIdx}`,
             target: iterId,
-            targetHandle: "left",
-            type: "step",
+            targetHandle: "bottom",
+            type: "smart",
             label: stepName,
             style: { stroke: "#388bfd", strokeWidth: 2 }
           });
-        }
+        });
       } else if (logicType === "conditional") {
         const diamondId = genId();
         const trueId = genId();
         const falseId = genId();
-        const diamondY = parentY + 180;
+        const diamondY = parentY;
+        const diamondX = parentX + parentWidth + 180;
         newNodes.push({
           id: diamondId,
           type: "condition",
-          position: { x: parentX, y: diamondY },
+          position: { x: diamondX, y: diamondY },
           data: {
             label: "Condition",
             typeLabel: "CONDITION",
@@ -23146,19 +23393,18 @@
           target: diamondId,
           targetHandle: "top",
           type: "bezier",
-          label: parentLineCode.slice(0, 20),
-          style: { stroke: "#d29922", strokeWidth: 2 }
+          label: parentLineCode.slice(0, 24)
         });
         newNodes.push({
           id: trueId,
           type: "block",
-          position: { x: parentX - 220, y: diamondY + 160 },
+          position: { x: diamondX + 220, y: diamondY - 160 },
           data: { label: "True Branch", typeLabel: "BLOCK", code: "processTrue();" }
         });
         newNodes.push({
           id: falseId,
           type: "block",
-          position: { x: parentX + 220, y: diamondY + 160 },
+          position: { x: diamondX + 220, y: diamondY + 160 },
           data: { label: "False Branch", typeLabel: "BLOCK", code: "processFalse();" }
         });
         newEdges.push({
@@ -23184,7 +23430,7 @@
       } else if (logicType === "recursion") {
         const leftId = genId();
         const rightId = genId();
-        const recurseY = parentY + 200;
+        const recurseY = parentY + parentHeight + 160;
         newNodes.push({
           id: leftId,
           type: "recursion",
@@ -23236,7 +23482,7 @@
       setSelectedNodeId("root");
       setSelectedLineIndex(0);
     };
-    const [showResetModal, setShowResetModal] = (0, import_react20.useState)(false);
+    const [showResetModal, setShowResetModal] = (0, import_react22.useState)(false);
     const resetCanvas = () => {
       setNodes([
         {
@@ -23257,20 +23503,21 @@
     };
     const selectedNode = nodes.find((n) => n.id === selectedNodeId);
     const selectedNodeLines = (selectedNode?.data?.code || "").split("\n");
-    return /* @__PURE__ */ import_react20.default.createElement("div", { className: "trace-tab-container" }, /* @__PURE__ */ import_react20.default.createElement("div", { className: "trace-toolbar" }, /* @__PURE__ */ import_react20.default.createElement("div", { className: "trace-selected-info" }, /* @__PURE__ */ import_react20.default.createElement("span", { className: "info-label" }, "Node:"), /* @__PURE__ */ import_react20.default.createElement("span", { className: "info-value" }, selectedNode?.data?.label || selectedNodeId), /* @__PURE__ */ import_react20.default.createElement("label", { className: "line-label" }, "From Line:"), /* @__PURE__ */ import_react20.default.createElement(
+    return /* @__PURE__ */ import_react22.default.createElement("div", { className: "trace-tab-container" }, /* @__PURE__ */ import_react22.default.createElement("div", { className: "trace-toolbar" }, /* @__PURE__ */ import_react22.default.createElement("div", { className: "trace-selected-info" }, /* @__PURE__ */ import_react22.default.createElement("span", { className: "info-label" }, "Node:"), /* @__PURE__ */ import_react22.default.createElement("span", { className: "info-value" }, selectedNode?.data?.label || selectedNodeId), /* @__PURE__ */ import_react22.default.createElement("label", { className: "line-label" }, "From Line:"), /* @__PURE__ */ import_react22.default.createElement(
       "select",
       {
         className: "line-select-inp",
         value: selectedLineIndex,
         onChange: (e) => setSelectedLineIndex(parseInt(e.target.value) || 0)
       },
-      selectedNodeLines.map((line, idx) => /* @__PURE__ */ import_react20.default.createElement("option", { key: idx, value: idx }, "L", idx + 1, ": ", line.trim().slice(0, 30)))
-    )), /* @__PURE__ */ import_react20.default.createElement("div", { className: "toolbar-actions" }, /* @__PURE__ */ import_react20.default.createElement("button", { className: "btn-tb btn-tb-loop", onClick: () => appendLogic("loop") }, "+ Add Loop (\u2192)"), /* @__PURE__ */ import_react20.default.createElement("button", { className: "btn-tb btn-tb-if", onClick: () => appendLogic("conditional") }, "+ Add If/Else (\u25C7)"), /* @__PURE__ */ import_react20.default.createElement("button", { className: "btn-tb btn-tb-recurse", onClick: () => appendLogic("recursion") }, "+ Add Recurse (\u2193)"), /* @__PURE__ */ import_react20.default.createElement("button", { className: "btn-tb btn-tb-del", onClick: deleteSelectedNode }, "\u2715 Delete"), /* @__PURE__ */ import_react20.default.createElement("span", { className: "toolbar-divider" }), /* @__PURE__ */ import_react20.default.createElement("button", { className: "btn-tb", onClick: () => setShowResetModal(true) }, "Reset Canvas"))), /* @__PURE__ */ import_react20.default.createElement("div", { className: "trace-reactflow-wrapper" }, /* @__PURE__ */ import_react20.default.createElement(ReactFlowProvider, null, /* @__PURE__ */ import_react20.default.createElement(
+      selectedNodeLines.map((line, idx) => /* @__PURE__ */ import_react22.default.createElement("option", { key: idx, value: idx }, "L", idx + 1, ": ", line.trim().slice(0, 30)))
+    )), /* @__PURE__ */ import_react22.default.createElement("div", { className: "toolbar-actions" }, /* @__PURE__ */ import_react22.default.createElement("button", { className: "btn-tb btn-tb-loop", onClick: () => appendLogic("loop") }, "+ Add Loop (\u2192)"), /* @__PURE__ */ import_react22.default.createElement("button", { className: "btn-tb btn-tb-if", onClick: () => appendLogic("conditional") }, "+ Add If/Else (\u25C7)"), /* @__PURE__ */ import_react22.default.createElement("button", { className: "btn-tb btn-tb-recurse", onClick: () => appendLogic("recursion") }, "+ Add Recurse (\u2193)"), /* @__PURE__ */ import_react22.default.createElement("button", { className: "btn-tb btn-tb-del", onClick: deleteSelectedNode }, "\u2715 Delete"), /* @__PURE__ */ import_react22.default.createElement("span", { className: "toolbar-divider" }), /* @__PURE__ */ import_react22.default.createElement("button", { className: "btn-tb", onClick: () => setShowResetModal(true) }, "Reset Canvas"))), /* @__PURE__ */ import_react22.default.createElement("div", { className: "trace-reactflow-wrapper" }, /* @__PURE__ */ import_react22.default.createElement(ReactFlowProvider, null, /* @__PURE__ */ import_react22.default.createElement(
       index,
       {
         nodes: enrichedNodes,
         edges: visibleEdges,
         nodeTypes,
+        edgeTypes,
         onNodesChange,
         onEdgesChange,
         onNodeClick,
@@ -23279,9 +23526,9 @@
         minZoom: 0.2,
         maxZoom: 2.5
       },
-      /* @__PURE__ */ import_react20.default.createElement(Background, { color: "#30363d", gap: 20, size: 1 }),
-      /* @__PURE__ */ import_react20.default.createElement(Controls, null)
-    ))), showResetModal && /* @__PURE__ */ import_react20.default.createElement("div", { className: "modal-overlay modal-center-overlay" }, /* @__PURE__ */ import_react20.default.createElement("div", { className: "modal-content shutdown-modal-panel" }, /* @__PURE__ */ import_react20.default.createElement("h3", { className: "shutdown-title" }, "Reset Canvas?"), /* @__PURE__ */ import_react20.default.createElement("p", { className: "shutdown-desc" }, "Are you sure you want to reset the canvas to the starting node? All existing nodes will be erased."), /* @__PURE__ */ import_react20.default.createElement("div", { style: { display: "flex", gap: "1rem", justifyContent: "center" } }, /* @__PURE__ */ import_react20.default.createElement("button", { className: "btn", onClick: () => setShowResetModal(false) }, "Cancel"), /* @__PURE__ */ import_react20.default.createElement("button", { className: "btn btn-danger", onClick: resetCanvas }, "Reset Canvas")))));
+      /* @__PURE__ */ import_react22.default.createElement(Background, { color: "#30363d", gap: 20, size: 1 }),
+      /* @__PURE__ */ import_react22.default.createElement(Controls, null)
+    ))), showResetModal && /* @__PURE__ */ import_react22.default.createElement("div", { className: "modal-overlay modal-center-overlay" }, /* @__PURE__ */ import_react22.default.createElement("div", { className: "modal-content shutdown-modal-panel" }, /* @__PURE__ */ import_react22.default.createElement("h3", { className: "shutdown-title" }, "Reset Canvas?"), /* @__PURE__ */ import_react22.default.createElement("p", { className: "shutdown-desc" }, "Are you sure you want to reset the canvas to the starting node? All existing nodes will be erased."), /* @__PURE__ */ import_react22.default.createElement("div", { style: { display: "flex", gap: "1rem", justifyContent: "center" } }, /* @__PURE__ */ import_react22.default.createElement("button", { className: "btn", onClick: () => setShowResetModal(false) }, "Cancel"), /* @__PURE__ */ import_react22.default.createElement("button", { className: "btn btn-danger", onClick: resetCanvas }, "Reset Canvas")))));
   }
 
   // src/components/canvas/AlgorithmCanvas.jsx
@@ -23304,11 +23551,11 @@
       nodes: [
         {
           id: "root",
-          type: "algorithm",
+          type: "function",
           position: { x: 80, y: 80 },
           data: {
             label: "Main()",
-            typeLabel: "ENTRY",
+            typeLabel: "FUNCTION",
             shape: "rect",
             code: "public void solve() {\n    for (int i = 0; i < n; i++) {\n        recurse(i);\n    }\n}"
           }
@@ -23326,15 +23573,17 @@
       const validNodes = rawNodes.map((n, idx) => {
         const pos = n.position && typeof n.position.x === "number" && typeof n.position.y === "number" ? n.position : { x: 80 + idx % 3 * 320, y: 80 + Math.floor(idx / 3) * 180 };
         const codeStr = n.data?.code || (Array.isArray(n.lines) ? n.lines.join("\n") : n.label || "code();");
+        const determinedType = n.type && n.type !== "algorithm" ? n.type : n.data?.typeLabel ? n.data.typeLabel.toLowerCase() : "function";
         return {
           id: n.id || `node_${idx}`,
-          type: "algorithm",
+          type: determinedType,
           position: pos,
           data: {
             label: n.data?.label || n.label || "Node",
-            typeLabel: n.data?.typeLabel || n.typeLabel || "BLOCK",
+            typeLabel: n.data?.typeLabel || n.typeLabel || determinedType.toUpperCase(),
             shape: n.data?.shape || n.shape || "rect",
-            code: codeStr
+            code: codeStr,
+            collapsedRanges: n.data?.collapsedRanges || []
           }
         };
       });
@@ -23358,12 +23607,12 @@
   }
   function AlgorithmCanvas({ currentPath, navigate }) {
     const subTab = currentPath.startsWith("/canvas/trace") ? "trace" : "design";
-    const [canvasData, setCanvasData] = (0, import_react22.useState)(() => loadStorage());
+    const [canvasData, setCanvasData] = (0, import_react24.useState)(() => loadStorage());
     const [nodes, setNodes, onNodesChange] = useNodesState(canvasData.trace.nodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(canvasData.trace.edges);
-    const [selectedNodeId, setSelectedNodeId] = (0, import_react22.useState)("root");
-    const [selectedLineIndex, setSelectedLineIndex] = (0, import_react22.useState)(0);
-    (0, import_react22.useEffect)(() => {
+    const [selectedNodeId, setSelectedNodeId] = (0, import_react24.useState)("root");
+    const [selectedLineIndex, setSelectedLineIndex] = (0, import_react24.useState)(0);
+    (0, import_react24.useEffect)(() => {
       const updatedTrace = { nodes, edges };
       const fullState = {
         title: canvasData.title,
@@ -23372,16 +23621,16 @@
       };
       saveStorage(fullState);
     }, [nodes, edges, canvasData.title, canvasData.design]);
-    const setTitle = (0, import_react22.useCallback)((newTitle) => {
+    const setTitle = (0, import_react24.useCallback)((newTitle) => {
       setCanvasData((prev) => ({ ...prev, title: newTitle }));
     }, []);
-    const setDesign = (0, import_react22.useCallback)((updater) => {
+    const setDesign = (0, import_react24.useCallback)((updater) => {
       setCanvasData((prev) => {
         const nextDesign = typeof updater === "function" ? updater(prev.design) : updater;
         return { ...prev, design: nextDesign };
       });
     }, []);
-    return /* @__PURE__ */ import_react22.default.createElement("div", { className: "canvas-main-container" }, /* @__PURE__ */ import_react22.default.createElement("div", { className: "canvas-sub-header" }, /* @__PURE__ */ import_react22.default.createElement(
+    return /* @__PURE__ */ import_react24.default.createElement("div", { className: "canvas-main-container" }, /* @__PURE__ */ import_react24.default.createElement("div", { className: "canvas-sub-header" }, /* @__PURE__ */ import_react24.default.createElement(
       "input",
       {
         type: "text",
@@ -23390,21 +23639,21 @@
         onChange: (e) => setTitle(e.target.value),
         placeholder: "Problem title..."
       }
-    ), /* @__PURE__ */ import_react22.default.createElement("div", { className: "nav-tabs" }, /* @__PURE__ */ import_react22.default.createElement(
+    ), /* @__PURE__ */ import_react24.default.createElement("div", { className: "nav-tabs" }, /* @__PURE__ */ import_react24.default.createElement(
       "button",
       {
         className: `nav-tab ${subTab === "design" ? "active" : ""}`,
         onClick: () => navigate("/canvas/design")
       },
       "Design"
-    ), /* @__PURE__ */ import_react22.default.createElement(
+    ), /* @__PURE__ */ import_react24.default.createElement(
       "button",
       {
         className: `nav-tab ${subTab === "trace" ? "active" : ""}`,
         onClick: () => navigate("/canvas/trace")
       },
       "Trace"
-    ))), /* @__PURE__ */ import_react22.default.createElement("div", { className: "canvas-viewport" }, /* @__PURE__ */ import_react22.default.createElement("div", { className: `tab-pane ${subTab !== "design" ? "hidden" : ""}` }, /* @__PURE__ */ import_react22.default.createElement(DesignTab, { design: canvasData.design, setDesign })), /* @__PURE__ */ import_react22.default.createElement("div", { className: `tab-pane ${subTab !== "trace" ? "hidden" : ""}` }, /* @__PURE__ */ import_react22.default.createElement(
+    ))), /* @__PURE__ */ import_react24.default.createElement("div", { className: "canvas-viewport" }, /* @__PURE__ */ import_react24.default.createElement("div", { className: `tab-pane ${subTab !== "design" ? "hidden" : ""}` }, /* @__PURE__ */ import_react24.default.createElement(DesignTab, { design: canvasData.design, setDesign })), /* @__PURE__ */ import_react24.default.createElement("div", { className: `tab-pane ${subTab !== "trace" ? "hidden" : ""}` }, /* @__PURE__ */ import_react24.default.createElement(
       TraceTab,
       {
         nodes,
@@ -23423,16 +23672,16 @@
 
   // src/App.jsx
   function App() {
-    const [currentPath, setCurrentPath] = (0, import_react24.useState)(() => window.location.pathname || "/");
-    const [toasts, setToasts] = (0, import_react24.useState)([]);
-    const [showShutdownOverlay, setShowShutdownOverlay] = (0, import_react24.useState)(false);
-    const navigate = (0, import_react24.useCallback)((newPath) => {
+    const [currentPath, setCurrentPath] = (0, import_react26.useState)(() => window.location.pathname || "/");
+    const [toasts, setToasts] = (0, import_react26.useState)([]);
+    const [showShutdownOverlay, setShowShutdownOverlay] = (0, import_react26.useState)(false);
+    const navigate = (0, import_react26.useCallback)((newPath) => {
       if (window.location.pathname !== newPath) {
         window.history.pushState({}, "", newPath);
       }
       setCurrentPath(newPath);
     }, []);
-    (0, import_react24.useEffect)(() => {
+    (0, import_react26.useEffect)(() => {
       const handlePopState = () => {
         setCurrentPath(window.location.pathname || "/");
       };
@@ -23457,21 +23706,21 @@
       }
     };
     const isCanvas = currentPath.startsWith("/canvas");
-    return /* @__PURE__ */ import_react24.default.createElement("div", { className: "app-layout-container" }, /* @__PURE__ */ import_react24.default.createElement(
+    return /* @__PURE__ */ import_react26.default.createElement("div", { className: "app-layout-container" }, /* @__PURE__ */ import_react26.default.createElement(
       Header,
       {
         currentPath,
         navigate,
         onShutdown: handleShutdown
       }
-    ), isCanvas ? /* @__PURE__ */ import_react24.default.createElement(AlgorithmCanvas, { currentPath, navigate }) : /* @__PURE__ */ import_react24.default.createElement(ProjectTracker, { onShowToast: showToast }), /* @__PURE__ */ import_react24.default.createElement("div", { className: "toast-container" }, toasts.map((t) => /* @__PURE__ */ import_react24.default.createElement("div", { key: t.id, className: "toast-msg" }, t.msg))), showShutdownOverlay && /* @__PURE__ */ import_react24.default.createElement("div", { className: "modal-overlay modal-center-overlay" }, /* @__PURE__ */ import_react24.default.createElement("div", { className: "card-panel shutdown-modal-panel" }, /* @__PURE__ */ import_react24.default.createElement("h2", { className: "shutdown-title" }, "Server stopped"), /* @__PURE__ */ import_react24.default.createElement("p", { className: "shutdown-desc" }, "The Keep-Me server has been shut down. You can close this tab."), /* @__PURE__ */ import_react24.default.createElement("button", { className: "btn", onClick: () => window.close() }, "Close Tab"))));
+    ), isCanvas ? /* @__PURE__ */ import_react26.default.createElement(AlgorithmCanvas, { currentPath, navigate }) : /* @__PURE__ */ import_react26.default.createElement(ProjectTracker, { onShowToast: showToast }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "toast-container" }, toasts.map((t) => /* @__PURE__ */ import_react26.default.createElement("div", { key: t.id, className: "toast-msg" }, t.msg))), showShutdownOverlay && /* @__PURE__ */ import_react26.default.createElement("div", { className: "modal-overlay modal-center-overlay" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "card-panel shutdown-modal-panel" }, /* @__PURE__ */ import_react26.default.createElement("h2", { className: "shutdown-title" }, "Server stopped"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "shutdown-desc" }, "The Keep-Me server has been shut down. You can close this tab."), /* @__PURE__ */ import_react26.default.createElement("button", { className: "btn", onClick: () => window.close() }, "Close Tab"))));
   }
 
   // src/index.jsx
   var container = document.getElementById("appRoot");
   if (container) {
     const root2 = (0, import_client.createRoot)(container);
-    root2.render(/* @__PURE__ */ import_react25.default.createElement(App, null));
+    root2.render(/* @__PURE__ */ import_react27.default.createElement(App, null));
   }
 })();
 /*! Bundled license information:

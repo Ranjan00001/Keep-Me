@@ -30,7 +30,7 @@ export default function ConditionNode(props) {
       {...props}
       badgeText="CONDITION"
       accentClass="node-condition"
-      shapeClass="shape-diamond-container"
+      shapeClass="shape-diamond"
     >
       <div className="condition-branches-toolbar">
         {!hasElse && (
