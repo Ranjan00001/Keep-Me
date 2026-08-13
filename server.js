@@ -247,10 +247,17 @@ const server = http.createServer(async (req, res) => {
   };
 
   try {
-    if (method === 'GET' && (pathname === '/' || pathname === '/index.html')) {
+    const isGetOrHead = method === 'GET' || method === 'HEAD';
+    if (isGetOrHead && (
+      pathname === '/' ||
+      pathname === '/index.html' ||
+      pathname === '/canvas' ||
+      pathname === '/canvas.html' ||
+      pathname.startsWith('/canvas/')
+    )) {
       return serveFile(res, path.join(__dirname, 'index.html'));
     }
-    if (method === 'GET' && ['/style.css', '/app.js', '/icon.svg'].includes(pathname)) {
+    if (isGetOrHead && ['/app-bundle.js', '/app-bundle.css', '/icon.svg', '/canvas-bundle.js', '/canvas-bundle.css'].includes(pathname)) {
       return serveFile(res, path.join(__dirname, pathname.slice(1)));
     }
 

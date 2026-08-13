@@ -3,7 +3,18 @@
   "version": "1.0.0",
   "description": "Multi-project task tracker",
   "dependencies": {
+    "@xyflow/react": "^12.11.2",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "sql.js": "^1.11.0"
   },
-  "private": true
+  "private": true,
+  "scripts": {
+    "build:app": "esbuild src/index.jsx --bundle --outfile=app-bundle.js --loader:.jsx=jsx --loader:.js=jsx --define:process.env.NODE_ENV=\\\"production\\\"",
+    "build:canvas": "esbuild src/canvas-app.jsx --bundle --outfile=canvas-bundle.js --loader:.jsx=jsx --loader:.js=jsx --define:process.env.NODE_ENV=\\\"production\\\"",
+    "build": "npm run build:app && npm run build:canvas"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
 }
