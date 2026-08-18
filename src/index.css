@@ -323,6 +323,11 @@ button {
   height: 180px;
   cursor: pointer;
 }
+.card-scene:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
 
 .card-flipper {
   width: 100%;
