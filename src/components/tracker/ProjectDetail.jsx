@@ -33,6 +33,31 @@ export default function ProjectDetail({
 
   const entries = project.entries || [];
 
+  const handleExport = () => {
+    const byDate = new Map();
+    entries.forEach(entry => {
+      if (!byDate.has(entry.date)) byDate.set(entry.date, []);
+      byDate.get(entry.date).push(entry);
+    });
+
+    const lines = [`# ${project.name}`, ''];
+    for (const [date, dayEntries] of byDate) {
+      lines.push(`## ${date}`);
+      dayEntries.forEach(entry => {
+        lines.push(`- [${entry.done ? 'x' : ' '}] ${entry.text}`);
+      });
+      lines.push('');
+    }
+
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${project.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-log.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="card-panel" style={{ flex: 1 }}>
       {/* Project Header Info */}
@@ -50,9 +75,20 @@ export default function ProjectDetail({
             </a>
           )}
         </div>
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
-          {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
+            {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
+          </span>
+          {entries.length > 0 && (
+            <button
+              className="btn"
+              style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem' }}
+              onClick={handleExport}
+            >
+              ⬇ Export
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Add Entry Form */}
