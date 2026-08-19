@@ -13267,7 +13267,17 @@
         {
           key: card.id,
           className: `card-scene ${isFlipped ? "is-flipped" : ""}`,
-          onClick: () => toggleFlip(card.id)
+          onClick: () => toggleFlip(card.id),
+          onKeyDown: (e) => {
+            if (e.key === " " || e.key === "Enter") {
+              e.preventDefault();
+              toggleFlip(card.id);
+            }
+          },
+          tabIndex: 0,
+          role: "button",
+          "aria-pressed": isFlipped,
+          "aria-label": isFlipped ? "Flashcard answer, press space to flip back" : "Flashcard question, press space to reveal answer"
         },
         /* @__PURE__ */ import_react5.default.createElement("div", { className: "card-flipper" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "card-face card-face-front" }, /* @__PURE__ */ import_react5.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "status-badge status-active", style: { fontSize: "0.65rem" } }, topicName), /* @__PURE__ */ import_react5.default.createElement("span", { style: { fontSize: "0.72rem", color: "var(--text-dim)" } }, "Reviewed ", card.review_count || 0, "x")), /* @__PURE__ */ import_react5.default.createElement("div", { style: { fontSize: "0.95rem", fontWeight: 600, color: "var(--text-main)", margin: "0.5rem 0" } }, card.front), /* @__PURE__ */ import_react5.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } }, /* @__PURE__ */ import_react5.default.createElement("span", { style: { fontSize: "0.72rem", color: "var(--text-muted)" } }, "Click to reveal answer \u21BA"), /* @__PURE__ */ import_react5.default.createElement(
           "button",
@@ -16627,16 +16637,20 @@
     if (nodes.length === 0) {
       return { x: 0, y: 0, width: 0, height: 0 };
     }
+    let hasNode = false;
     const box = nodes.reduce((currBox, nodeOrId) => {
       const isId = typeof nodeOrId === "string";
       let currentNode = !params.nodeLookup && !isId ? nodeOrId : void 0;
       if (params.nodeLookup) {
         currentNode = isId ? params.nodeLookup.get(nodeOrId) : !isInternalNodeBase(nodeOrId) ? params.nodeLookup.get(nodeOrId.id) : nodeOrId;
       }
-      const nodeBox = currentNode ? nodeToBox(currentNode, params.nodeOrigin) : { x: 0, y: 0, x2: 0, y2: 0 };
-      return getBoundsOfBoxes(currBox, nodeBox);
+      if (!currentNode) {
+        return currBox;
+      }
+      hasNode = true;
+      return getBoundsOfBoxes(currBox, nodeToBox(currentNode, params.nodeOrigin));
     }, { x: Infinity, y: Infinity, x2: -Infinity, y2: -Infinity });
-    return boxToRect(box);
+    return hasNode ? boxToRect(box) : { x: 0, y: 0, width: 0, height: 0 };
   };
   var getInternalNodesBounds = (nodeLookup, params = {}) => {
     let box = { x: Infinity, y: Infinity, x2: -Infinity, y2: -Infinity };
@@ -16722,8 +16736,7 @@
       if (!parentNode) {
         onError?.("005", errorMessages["error005"]());
       } else {
-        const parentWidth = parentNode.measured.width;
-        const parentHeight = parentNode.measured.height;
+        const { width: parentWidth, height: parentHeight } = getNodeDimensions(parentNode);
         if (parentWidth && parentHeight) {
           extent = [
             [parentX, parentY],
@@ -18549,12 +18562,12 @@
       }
     };
   }
-  function createFilter({ zoomActivationKeyPressed, zoomOnScroll, zoomOnPinch, panOnDrag, panOnScroll, zoomOnDoubleClick, userSelectionActive, noWheelClassName, noPanClassName, lib, connectionInProgress }) {
+  function createFilter({ panActivationKeyPressed, zoomActivationKeyPressed, zoomOnScroll, zoomOnPinch, panOnDrag, panOnScroll, zoomOnDoubleClick, userSelectionActive, noWheelClassName, noPanClassName, lib, connectionInProgress }) {
     return (event) => {
       const zoomScroll = zoomActivationKeyPressed || zoomOnScroll;
       const pinchZoom = zoomOnPinch && event.ctrlKey;
       const isWheelEvent = event.type === "wheel";
-      if (event.button === 1 && event.type === "mousedown" && (isWrappedWithClass(event, `${lib}-flow__node`) || isWrappedWithClass(event, `${lib}-flow__edge`))) {
+      if (event.button === 1 && event.type === "mousedown" && (isWrappedWithClass(event, `${lib}-flow__node`) || isWrappedWithClass(event, `${lib}-flow__edge`) || isWrappedWithClass(event, `${lib}-flow__selection`) || isWrappedWithClass(event, `${lib}-flow__nodesselection`))) {
         return true;
       }
       if (!panOnDrag && !zoomScroll && !panOnScroll && !zoomOnDoubleClick && !zoomOnPinch) {
@@ -18589,7 +18602,7 @@
         return false;
       }
       const buttonAllowed = Array.isArray(panOnDrag) && panOnDrag.includes(event.button) || !event.button || event.button <= 1;
-      return (!event.ctrlKey || isWheelEvent) && buttonAllowed;
+      return (!event.ctrlKey || isWheelEvent || panActivationKeyPressed) && buttonAllowed;
     };
   }
   function XYPanZoom({ domNode, minZoom, maxZoom, translateExtent, viewport, onPanZoom, onPanZoomStart, onPanZoomEnd, onDraggingChange }) {
@@ -18638,7 +18651,7 @@
       }
       return false;
     }
-    function update({ noWheelClassName, noPanClassName, onPaneContextMenu, userSelectionActive, panOnScroll, panOnDrag, panOnScrollMode, panOnScrollSpeed, preventScrolling, zoomOnPinch, zoomOnScroll, zoomOnDoubleClick, zoomActivationKeyPressed, lib, onTransformChange, connectionInProgress, paneClickDistance, selectionOnDrag }) {
+    function update({ noWheelClassName, noPanClassName, onPaneContextMenu, userSelectionActive, panOnScroll, panOnDrag, panOnScrollMode, panOnScrollSpeed, preventScrolling, zoomOnPinch, zoomOnScroll, zoomOnDoubleClick, panActivationKeyPressed = false, zoomActivationKeyPressed, lib, onTransformChange, connectionInProgress, paneClickDistance, selectionOnDrag }) {
       if (userSelectionActive && !zoomPanValues.isZoomingOrPanning) {
         destroy();
       }
@@ -18685,6 +18698,7 @@
       });
       d3ZoomInstance.on("end", panZoomEndHandler);
       const filter2 = createFilter({
+        panActivationKeyPressed,
         zoomActivationKeyPressed,
         panOnDrag,
         zoomOnScroll,
@@ -19496,7 +19510,7 @@
     const [keyCodes, keysToWatch] = (0, import_react9.useMemo)(() => {
       if (keyCode !== null) {
         const keyCodeArr = Array.isArray(keyCode) ? keyCode : [keyCode];
-        const keys = keyCodeArr.filter((kc) => typeof kc === "string").map((kc) => kc.replace("+", "\n").replace("\n\n", "\n+").split("\n"));
+        const keys = keyCodeArr.filter((kc) => typeof kc === "string").map((kc) => kc.replace(/\+/g, "\n").replace("\n\n", "\n+").split("\n"));
         const keysFlat = keys.reduce((res, item) => res.concat(...item), []);
         return [keys, keysFlat];
       }
@@ -20099,7 +20113,7 @@
     lib: s.lib,
     connectionInProgress: s.connection.inProgress
   });
-  function ZoomPane({ onPaneContextMenu, zoomOnScroll = true, zoomOnPinch = true, panOnScroll = false, panOnScrollSpeed = 0.5, panOnScrollMode = PanOnScrollMode.Free, zoomOnDoubleClick = true, panOnDrag = true, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, zoomActivationKeyCode, preventScrolling = true, children: children2, noWheelClassName, noPanClassName, onViewportChange, isControlledViewport, paneClickDistance, selectionOnDrag }) {
+  function ZoomPane({ onPaneContextMenu, zoomOnScroll = true, zoomOnPinch = true, panOnScroll = false, panActivationKeyPressed, panOnScrollSpeed = 0.5, panOnScrollMode = PanOnScrollMode.Free, zoomOnDoubleClick = true, panOnDrag = true, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, zoomActivationKeyCode, preventScrolling = true, children: children2, noWheelClassName, noPanClassName, onViewportChange, isControlledViewport, paneClickDistance, selectionOnDrag }) {
     const store = useStoreApi();
     const zoomPane = (0, import_react9.useRef)(null);
     const { userSelectionActive, lib, connectionInProgress } = useStore(selector$i, shallow$1);
@@ -20154,6 +20168,7 @@
         zoomOnScroll,
         zoomOnPinch,
         panOnScroll,
+        panActivationKeyPressed,
         panOnScrollSpeed,
         panOnScrollMode,
         zoomOnDoubleClick,
@@ -20174,6 +20189,7 @@
       zoomOnScroll,
       zoomOnPinch,
       panOnScroll,
+      panActivationKeyPressed,
       panOnScrollSpeed,
       panOnScrollMode,
       zoomOnDoubleClick,
@@ -20260,6 +20276,9 @@
       }
     };
     const onPointerDownCapture = (event) => {
+      if (event.pointerType === "touch" && panOnDrag !== false && !selectionKeyPressed) {
+        return;
+      }
       const { domNode, transform: transform2 } = store.getState();
       containerBounds.current = domNode?.getBoundingClientRect();
       if (!containerBounds.current)
@@ -20785,7 +20804,7 @@
     const _selectionOnDrag = selectionOnDrag && panOnDrag !== true;
     const isSelecting = selectionKeyPressed || userSelectionActive || _selectionOnDrag;
     useGlobalKeyHandler({ deleteKeyCode, multiSelectionKeyCode });
-    return (0, import_jsx_runtime.jsx)(ZoomPane, { onPaneContextMenu, elementsSelectable, zoomOnScroll, zoomOnPinch, panOnScroll, panOnScrollSpeed, panOnScrollMode, zoomOnDoubleClick, panOnDrag: !selectionKeyPressed && panOnDrag, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, zoomActivationKeyCode, preventScrolling, noWheelClassName, noPanClassName, onViewportChange, isControlledViewport, paneClickDistance, selectionOnDrag: _selectionOnDrag, children: (0, import_jsx_runtime.jsxs)(Pane, { onSelectionStart, onSelectionEnd, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneContextMenu, onPaneScroll, panOnDrag, autoPanOnSelection, isSelecting: !!isSelecting, selectionMode, selectionKeyPressed, paneClickDistance, selectionOnDrag: _selectionOnDrag, children: [children2, nodesSelectionActive && (0, import_jsx_runtime.jsx)(NodesSelection, { onSelectionContextMenu, noPanClassName, disableKeyboardA11y })] }) });
+    return (0, import_jsx_runtime.jsx)(ZoomPane, { onPaneContextMenu, elementsSelectable, zoomOnScroll, zoomOnPinch, panOnScroll, panActivationKeyPressed, panOnScrollSpeed, panOnScrollMode, zoomOnDoubleClick, panOnDrag: !selectionKeyPressed && panOnDrag, defaultViewport: defaultViewport2, translateExtent, minZoom, maxZoom, zoomActivationKeyCode, preventScrolling, noWheelClassName, noPanClassName, onViewportChange, isControlledViewport, paneClickDistance, selectionOnDrag: _selectionOnDrag, children: (0, import_jsx_runtime.jsxs)(Pane, { onSelectionStart, onSelectionEnd, onPaneClick, onPaneMouseEnter, onPaneMouseMove, onPaneMouseLeave, onPaneContextMenu, onPaneScroll, panOnDrag, autoPanOnSelection, isSelecting: !!isSelecting, selectionMode, selectionKeyPressed, paneClickDistance, selectionOnDrag: _selectionOnDrag, children: [children2, nodesSelectionActive && (0, import_jsx_runtime.jsx)(NodesSelection, { onSelectionContextMenu, noPanClassName, disableKeyboardA11y })] }) });
   }
   FlowRendererComponent.displayName = "FlowRenderer";
   var FlowRenderer = (0, import_react9.memo)(FlowRendererComponent);
@@ -21385,7 +21404,7 @@
         ...edgePosition || nullPosition,
         zIndex: zIndex2
       };
-    }, [edge.source, edge.target, edge.sourceHandle, edge.targetHandle, edge.selected, edge.zIndex]), shallow$1);
+    }, [edge.source, edge.target, edge.sourceHandle, edge.targetHandle, edge.selected, edge.zIndex, onError]), shallow$1);
     const markerStartUrl = (0, import_react9.useMemo)(() => edge.markerStart ? `url('#${getMarkerId(edge.markerStart, rfId)}')` : void 0, [edge.markerStart, rfId]);
     const markerEndUrl = (0, import_react9.useMemo)(() => edge.markerEnd ? `url('#${getMarkerId(edge.markerEnd, rfId)}')` : void 0, [edge.markerEnd, rfId]);
     if (edge.hidden || sourceX === null || sourceY === null || targetX === null || targetY === null) {
@@ -21745,10 +21764,10 @@
         zIndexMode
       }),
       setNodes: (nodes2) => {
-        const { nodeLookup, parentLookup, nodeOrigin: nodeOrigin2, elevateNodesOnSelect, fitViewQueued, zIndexMode: zIndexMode2, nodesSelectionActive } = get3();
+        const { nodeLookup, parentLookup, nodeOrigin: nodeOrigin2, nodeExtent: nodeExtent2, elevateNodesOnSelect, fitViewQueued, zIndexMode: zIndexMode2, nodesSelectionActive } = get3();
         const { nodesInitialized, hasSelectedNodes } = adoptUserNodes(nodes2, nodeLookup, parentLookup, {
           nodeOrigin: nodeOrigin2,
-          nodeExtent,
+          nodeExtent: nodeExtent2,
           elevateNodesOnSelect,
           checkEquality: true,
           zIndexMode: zIndexMode2
@@ -22094,8 +22113,8 @@
     const offsetXY = Array.isArray(offset) ? offset : [offset, offset];
     const patternDimensions = isCross ? [scaledSize, scaledSize] : scaledGap;
     const scaledOffset = [
-      offsetXY[0] * transform2[2] || 1 + patternDimensions[0] / 2,
-      offsetXY[1] * transform2[2] || 1 + patternDimensions[1] / 2
+      offsetXY[0] * transform2[2] + patternDimensions[0] / 2,
+      offsetXY[1] * transform2[2] + patternDimensions[1] / 2
     ];
     const _patternId = `${patternId}${id2 ? id2 : ""}`;
     return (0, import_jsx_runtime.jsxs)("svg", { className: cc(["react-flow__background", className]), style: {

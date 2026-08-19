@@ -73,6 +73,16 @@ export default function FlashcardGallery({
                 key={card.id}
                 className={`card-scene ${isFlipped ? 'is-flipped' : ''}`}
                 onClick={() => toggleFlip(card.id)}
+                onKeyDown={(e) => {
+                  if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    toggleFlip(card.id);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-pressed={isFlipped}
+                aria-label={isFlipped ? 'Flashcard answer, press space to flip back' : 'Flashcard question, press space to reveal answer'}
               >
                 <div className="card-flipper">
                   {/* Front Side */}
